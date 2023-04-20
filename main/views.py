@@ -5,4 +5,4 @@ def mainPage(response):
     if not response.user.is_authenticated:
         return redirect ("/login")
         
-    return render(response, "main/base.html")
+    return render(response, "CinemaCustomerPages/home.html")

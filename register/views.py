@@ -12,7 +12,6 @@ def register(response):
             print(form.errors)
     else:
         form = RegisterForm(response.POST)
-    return render(response, "register/register.html", {"form" : form})
+    return render(response, "user_register/register.html", {"form" : form})
 
-    
         
