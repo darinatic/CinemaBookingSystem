@@ -15,13 +15,14 @@
             height: 100%;
         }
         h2,
+        h3,
         h4,
         hr {
             font-family: Arial, Helvetica, sans-serif;
             color: gold;
         }
         p {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             font-size: large;
         }
@@ -31,14 +32,17 @@
             box-sizing: border-box;
         }
 
+        .ticketCartcontainer {
+            display: flex;
+        }
+
         .seat-section {
-            background-color: #242333;
             color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 80vh;
             font-family: "Lato", sans-serif;
             margin: 0;
         }
@@ -57,6 +61,12 @@
             -moz-appearance: none;
             -webkit-appearance: none;
             appearance: none;
+        }
+
+        .seatSelectorCon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .seat-container {
@@ -140,6 +150,53 @@
         p.text span {
             color: rgb(158, 248, 158);
         }
+
+        .sc-container {
+            display: block;
+            justify-content: center;
+            margin-left: 3em;
+        }
+
+        .sc-cart {
+            border: solid 2px black;
+            width: 350px;
+            min-height: 300px;
+            background-color: gray;
+            height: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        .sc-cart table td {
+            padding: 2px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 20px;
+            font-style: Arial, Helvetica, sans-serif;
+        }
+
+        .sc-totalPrice {
+            display: flex;
+            justify-content: center;
+        }
+        .sc-totalPrice p {
+            position: relative;
+            top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .sc-ticket {
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+            height: 35px;
+            border: 2px solid black;
+            box-sizing: border-box;
+            border-radius: 4px;
+            width: 9em;
+            background-color: brown;
+        }
     </style>
 
 
@@ -155,187 +212,266 @@
                             {{ movie.movie_genre }}</p>
                         <p class="py-2">Duration:
                             {{ movie.movie_duration }}
-                            hrs</p>
+                            hrs
+                        </p>
 
                         <h4 class="mt-5">Synosis</h4>
                         <br>
                             <p>{{ movie.movie_description }}</p>
                         </div>
                     </div>
-                    <hr></div>
-                </div>
-            </div>
-        </div>
+                    <hr>
+                        <div class="seatSelectorCon">
+                            <section class="seat-section ">
 
-        <section class="seat-section ">
-            <div class="movie-container">
-                <label>
-                    Select a movie:</label>
-                <select id="movie">
-                    <option value="220">Godzilla vs Kong (RS.220)</option>
-                    <option value="320">Radhe (RS.320)</option>
-                    <option value="250">RRR (RS.250)</option>
-                    <option value="260">F9 (RS.260)</option>
-                </select>
-            </div>
-            <ul class="showcase">
-                <li>
-                    <div class="seat"></div>
-                    <small>Available</small>
-                </li>
-                <li>
-                    <div class="seat selected"></div>
-                    <small>Selected</small>
-                </li>
-                <li>
-                    <div class="seat sold"></div>
-                    <small>Sold</small>
-                </li>
-            </ul>
+                                <h3>Select the seat u want to purchase</h3>
+                                <br>
 
-            <div class="seat-container">
-                <div class="screen"></div>
+                                    <ul class="showcase">
+                                        <li>
+                                            <div class="seat"></div>
+                                            <small>Available</small>
+                                        </li>
+                                        <li>
+                                            <div class="seat selected"></div>
+                                            <small>Selected</small>
+                                        </li>
+                                        <li>
+                                            <div class="seat sold"></div>
+                                            <small>Sold</small>
+                                        </li>
+                                    </ul>
 
-                <div class="row  justify-content-center justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                </div>
+                                    <div class="seat-container">
+                                        <div class="screen"></div>
 
-                <div class="row  justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                </div>
-                <div class="row  justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat sold"></div>
-                </div>
-                <div class="row  justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                </div>
-                <div class="row  justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                </div>
-                <div class="row  justify-content-center">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat sold"></div>
-                    <div class="seat"></div>
-                </div>
-            </div>
+                                        <div class="row  justify-content-center justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                        </div>
 
-            <p class="text">
-                You have selected
-                <span id="count">0</span>
-                seat for a price of RS.<span id="total">0</span>
-            </p>
-        </section>
+                                        <div class="row  justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                        </div>
+                                        <div class="row  justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat sold"></div>
+                                        </div>
+                                        <div class="row  justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                        </div>
+                                        <div class="row  justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                        </div>
+                                        <div class="row  justify-content-center">
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat sold"></div>
+                                            <div class="seat"></div>
+                                        </div>
+                                    </div>
 
-        <script>
-            const container = document.querySelector(".seat-container");
-            const seats = document.querySelectorAll(".row .seat:not(.sold)");
-            const count = document.getElementById("count");
-            const total = document.getElementById("total");
-            const movieSelect = document.getElementById("movie");
+                                    <p>Price per Seat :
+                                        <data id="movie" value="5">5</data>
+                                    </p>
 
-            populateUI();
+                                    <p class="text">
+                                        You have selected
+                                        <span id="count">0</span>
+                                        seat for a price of $SG.<span id="total">0</span>
+                                    </p>
 
-            let ticketPrice = + movieSelect.value;
+                                </section>
+                                <div>
+                                    <div class="sc-container">
+                                        <div class="sc-cart">
+                                            <table class="table">
+                                                
+                                            </table>
+                                        </div>
+                                        <div style="display: inline-block">
+                                            <div class="sc-totalPrice">
+                                                <p>Total : $<span id="totalPrice">0</span>
+                                                </p>
+                                            </div>
+                                            <div class="cart-buttons">
+                                                <button class="sc-reset">Reset</button>
+                                                <button class="sc-checkout">CheckOut</button>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
 
-            // Save selected movie index and price
-            function setMovieData(movieIndex, moviePrice) {
-                localStorage.setItem("selectedMovieIndex", movieIndex);
-                localStorage.setItem("selectedMoviePrice", moviePrice);
-            }
+                            </div>
 
-            // Update total and count
-            function updateSelectedCount() {
-                const selectedSeats = document.querySelectorAll(".row .seat.selected");
+                        </div>
 
-                const seatsIndex = [... selectedSeats].map((seat) => [... seats].indexOf(seat));
 
-                localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
+                        <script>
+                            const container = document.querySelector(".seat-container");
+                            const seats = document.querySelectorAll(".row .seat:not(.sold)");
+                            const count = document.getElementById("count");
+                            const total = document.getElementById("total");
+                            const totalPrice = document.getElementById("totalPrice")
+                            const movieSelect = document.getElementById("movie");
+                            const resetBtm = document.querySelector(".sc-reset");
 
-                const selectedSeatsCount = selectedSeats.length;
+                            const table = document.querySelector(".table");
+                            const newRow = table.insertRow();
 
-                count.innerText = selectedSeatsCount;
-                total.innerText = selectedSeatsCount * ticketPrice;
+                            populateUI();
 
-                setMovieData(movieSelect.selectedIndex, movieSelect.value);
-            }
+                            let ticketPrice =+ movieSelect.value;
 
-            // Get data from localstorage and populate UI
-            function populateUI() {
-                const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+                            // Save selected movie index and price
+                            function setMovieData(movieIndex, moviePrice) {
+                                localStorage.setItem("selectedMovieIndex", movieIndex);
+                                localStorage.setItem("selectedMoviePrice", moviePrice);
+                            }
 
-                if (selectedSeats !== null && selectedSeats.length > 0) {
-                    seats.forEach((seat, index) => {
-                        if (selectedSeats.indexOf(index) > -1) {
-                            seat.classList.add("selected");
-                        }
-                    });
-                }
+                            // Update total and count
+                            function updateSelectedCount() {
+                                const selectedSeats = document.querySelectorAll(".row .seat.selected");
 
-                const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+                                const seatsIndex = [... selectedSeats].map((seat) => [... seats].indexOf(seat));
 
-                if (selectedMovieIndex !== null) {
-                    movieSelect.selectedIndex = selectedMovieIndex;
-                }
-            }
+                                localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
 
-            // Movie select event
-            movieSelect.addEventListener("change", (e) => {
-                ticketPrice = + e.target.value;
-                setMovieData(e.target.selectedIndex, e.target.value);
-                updateSelectedCount();
-            });
+                                const selectedSeatsCount = selectedSeats.length;
 
-            // Seat click event
-            container.addEventListener("click", (e) => {
-                if (e.target.classList.contains("seat") && !e.target.classList.contains("sold")) {
-                    e.target.classList.toggle("selected");
+                                count.innerText = selectedSeatsCount;
+                                total.innerText = selectedSeatsCount * ticketPrice;
+                                totalPrice.innerText = selectedSeatsCount * ticketPrice;
 
-                    updateSelectedCount();
-                }
-            });
+                                setMovieData(movieSelect.selectedIndex, movieSelect.value);
+                            }
 
-            // Initial count and total set
-            updateSelectedCount();
-        </script>
+                            // Get data from localstorage and populate UI
+                            function populateUI() {
+                                const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
 
-    {% endblock %}
+                                if (selectedSeats !== null && selectedSeats.length > 0) {
+                                    seats.forEach((seat, index) => {
+                                        if (selectedSeats.indexOf(index) > -1) {
+                                            seat.classList.add("selected");
+                                        }
+                                    });
+                                }
+
+                                const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+
+                                if (selectedMovieIndex !== null) {
+                                    movieSelect.selectedIndex = selectedMovieIndex;
+                                }
+                            }
+
+                            function addSeatToCart(index) {
+
+                                const newRow = table.insertRow();
+                                newRow.setAttribute("data-indexes", index.toString());
+
+                                const seat = newRow.insertCell(0);
+                                const typeSelect = newRow.insertCell(1);
+                                const price = newRow.insertCell(2);
+                                const button = newRow.insertCell(3);
+
+                                seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + index.toString() + '</p></div>';
+                                typeSelect.innerHTML = '<select name="ticket_type" id="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
+                                price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
+                                button.innerHTML = '<div class="ticket-deselect-btn"><button>-</button></div>';
+
+                                button.addEventListener("click", () => {
+                                    table.deleteRow(newRow.rowIndex);
+                                    updateSelectedCount();
+                                });
+                            }
+
+                            function removeSeatFromCart(index) {
+                                const rows = table.rows;
+                                for (let i = 1; i < rows.length; i++) {
+                                    if (rows[i].getAttribute("data-indexes") === index.toString()) {
+                                        table.deleteRow(i);
+                                        updateSelectedCount();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            function clearSelection() {
+                                const selectedSeats = document.querySelectorAll(".row .seat.selected");
+                                selectedSeats.forEach((seat) => {
+                                    seat.classList.remove("selected");
+                                });
+
+                                const rows = table.rows;
+                                for (let i = rows.length - 1; i > 0; i--) {
+                                    table.deleteRow(i);
+                                }
+
+                                updateSelectedCount();
+                            }
+
+                            // Seat click event
+                            container.addEventListener("click", (e) => {
+                                if (e.target.classList.contains("seat") && !e.target.classList.contains("sold")) {
+                                    e.target.classList.toggle("selected");
+
+                                    updateSelectedCount();
+                                    console.log(e.target.classList.contains("selected"))
+
+                                    if (e.target.classList.contains("selected")) {
+                                        addSeatToCart([... seats].indexOf(e.target));
+                                    } else {
+                                        const index = [... seats].indexOf(e.target);
+                                        removeSeatFromCart(index);
+                                    }
+                                }
+                            });
+
+                            resetBtm.addEventListener("click", () => {
+                                clearSelection();
+                            });
+
+                            // Initial count and total set
+                            updateSelectedCount();
+                        </script>
+
+                    {% endblock %}
