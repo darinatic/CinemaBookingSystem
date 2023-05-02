@@ -322,9 +322,7 @@
                                 <div>
                                     <div class="sc-container">
                                         <div class="sc-cart">
-                                            <table class="table">
-                                                
-                                            </table>
+                                            <table class="table"></table>
                                         </div>
                                         <div style="display: inline-block">
                                             <div class="sc-totalPrice">
@@ -333,10 +331,10 @@
                                             </div>
                                             <div class="cart-buttons">
                                                 <button class="sc-reset">Reset</button>
-                                                <button class="sc-checkout">CheckOut</button>
+                                                <button class="sc-addToCart">Add to Cart</button>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
 
@@ -353,13 +351,19 @@
                             const totalPrice = document.getElementById("totalPrice")
                             const movieSelect = document.getElementById("movie");
                             const resetBtm = document.querySelector(".sc-reset");
+                            const addToCartBtn = document.querySelector(".sc-addToCart");
 
                             const table = document.querySelector(".table");
                             const newRow = table.insertRow();
 
+                            const movieJson = "{{ movie_json|escapejs }}";
+                            const movieObj = JSON.parse(movieJson);
+                            
+                            let addTicketsOnReload = true;
+
                             populateUI();
 
-                            let ticketPrice =+ movieSelect.value;
+                            let ticketPrice = + movieSelect.value;
 
                             // Save selected movie index and price
                             function setMovieData(movieIndex, moviePrice) {
@@ -372,8 +376,15 @@
                                 const selectedSeats = document.querySelectorAll(".row .seat.selected");
 
                                 const seatsIndex = [... selectedSeats].map((seat) => [... seats].indexOf(seat));
-
+                                
                                 localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
+
+                                if (addTicketsOnReload) {
+                                    seatsIndex.forEach((seat) => {
+                                        addSeatToCart(seat);
+                                    });
+                                    addTicketsOnReload = false;
+                                }
 
                                 const selectedSeatsCount = selectedSeats.length;
 
@@ -468,6 +479,32 @@
 
                             resetBtm.addEventListener("click", () => {
                                 clearSelection();
+                            });
+
+                            addToCartBtn.addEventListener("click", () => {
+                                
+                                
+                                
+                                const rows = table.rows;
+                                const seats = [];
+
+                                for (let i = 1; i < rows.length; i++) {
+                                    const indexes = rows[i].getAttribute("data-indexes").split(",");
+                                    const seat = indexes.map((index) => [index])[0][0];
+                                    const price = rows[i].querySelector(".ticket-price").innerText;
+                                    seats.push({seat, price});
+                                }
+                                
+                                const data = {
+                                    "movie": movieObj,
+                                    "seat": seats
+                                };
+                                
+                                const params = new URLSearchParams();
+                                params.set("data", JSON.stringify(data));
+
+                                const url = "{% url 'addtoCart' %}?" + params.toString();
+                                window.location.href = url;
                             });
 
                             // Initial count and total set

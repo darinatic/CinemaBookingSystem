@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser 
 from django.db import models
 from register.models import User
+from datetime import datetime
  
 class Movie(models.Model): 
     
@@ -25,9 +26,9 @@ class FoodAndBeverage(models.Model):
         return self.combo_name 
      
 class CinemaRoom(models.Model): 
-    room_id = models.AutoField(primary_key=True) 
-    room_name = models.CharField 
-    total_seat = models.IntegerField 
+    room_id = models.AutoField(primary_key=True, auto_created=True, null=False) 
+    room_name = models.CharField(max_length=20, default="Room 1")
+    total_seat = models.IntegerField(default=100)
  
     def __str__(self): 
         return self.room_name 
@@ -43,10 +44,10 @@ class RatingAndReview(models.Model):
         return self.user_id.username, self.rating 
      
 class MovieSession(models.Model): 
-    session_id = models.AutoField(primary_key=True) 
+    session_id = models.AutoField(primary_key=True, auto_created=True, null=False) 
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE) 
     room_id = models.ForeignKey(CinemaRoom, on_delete=models.CASCADE) 
-    start_time = models.DateTimeField 
+    start_time = models.DateTimeField(default=datetime.now())
  
     def __str__(self): 
         return self.movie_id.movie_title, self.start_time 
@@ -64,7 +65,7 @@ class Seat(models.Model):
 
 class Ticket(models.Model): 
     ticket_id = models.AutoField(primary_key=True) 
-    ticket_type = models.CharField 
+    ticket_type = models.CharField
     user_id = models.ForeignKey(User, on_delete=models.CASCADE) 
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE) 
     seat_id = models.ForeignKey(Seat, on_delete=models.CASCADE) 
@@ -73,3 +74,4 @@ class Ticket(models.Model):
  
     def __str__(self): 
         return self.user_id.username, self.movie_session, self.movie_session.room_id.room_name
+    
