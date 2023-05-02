@@ -1,7 +1,10 @@
-from django.contrib.auth.models import AbstractUser 
+# from django.contrib.auth.models import AbstractUser 
 from django.db import models
 from register.models import User
 from datetime import datetime
+
+# class User(AbstractUser): 
+#     user_type_id = models.IntegerField(default=1)
  
 class Movie(models.Model): 
     
@@ -11,8 +14,9 @@ class Movie(models.Model):
     movie_title = models.CharField(max_length=200, default="John Wick")
     movie_description = models.TextField(max_length=250, default="John is very angry")
     movie_genre = models.CharField(max_length=50, default="Action") 
+    movie_duration = models.IntegerField(default="2:00")
     movie_img = models.TextField(default=JOHN_WICK_IMAGE)
-    movie_duration = models.CharField(max_length=20, default="2:00")
+    is_active = models.BooleanField(default=True)
  
     def __str__(self): 
         return self.movie_title 
@@ -35,10 +39,10 @@ class CinemaRoom(models.Model):
      
 class RatingAndReview(models.Model): 
     review_id = models.AutoField(primary_key=True) 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE) 
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE) 
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE) 
     rating = models.IntegerField() 
-    review = models.TextField() 
+    review = models.TextField(max_length=250) 
  
     def __str__(self): 
         return self.user_id.username, self.rating 
@@ -50,18 +54,24 @@ class MovieSession(models.Model):
     start_time = models.DateTimeField(default=datetime.now())
  
     def __str__(self): 
-        return self.movie_id.movie_title, self.start_time 
-     
-class Seat(models.Model): 
-    seat_id = models.AutoField(primary_key=True) 
-    room_id = models.ForeignKey(CinemaRoom, on_delete=models.CASCADE) 
-    session_id = models.ForeignKey(MovieSession, on_delete=models.CASCADE) 
-    seat_row = models.CharField(max_length=3) 
-    seat_number = models.IntegerField 
-    is_availabe = models.BooleanField 
- 
-    def __str__(self): 
-        return self.room_id.room_name, self.seat_row, self.seat_number
+        return f'{self.room_name}'
+    
+class MovieSession(models.Model):
+    session_id = models.AutoField(primary_key=True)
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    room_id = models.ForeignKey(CinemaRoom, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    
+    def __str__(self):
+        return f'{self.movie_id.movie_title} in {self.room_id.room_name} at {self.start_time}'
+    
+class Seat(models.Model):
+    seat_id = models.AutoField(primary_key=True)
+    room_id = models.ForeignKey('CinemaRoom', on_delete=models.CASCADE)
+    session_id = models.ForeignKey('MovieSession', null=True, on_delete=models.SET_NULL)
+    seat_row = models.CharField(max_length=1)
+    seat_number = models.PositiveSmallIntegerField()
+    is_available = models.BooleanField(default=True)
 
 class Ticket(models.Model): 
     ticket_id = models.AutoField(primary_key=True) 

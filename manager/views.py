@@ -1,0 +1,203 @@
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.db.models import Q
+from manager.forms import CinemaRoomForm, FoodAndDrinksForm, MovieForm, MovieSessionForm, ReportForm, SeatForm
+from main.models import CinemaRoom, FoodAndBeverage, Movie, MovieSession, Ticket, Seat
+
+# Functions for Main Page
+def manager_home(request):
+    return render(request, 'manager_home.html')
+
+# Functions for Cinema Room
+def create_cinema_room(request):
+    if request.method == 'POST':
+        form = CinemaRoomForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cinema_room_list')
+    else:
+        form = CinemaRoomForm()
+    return render(request, 'cinema_room_create.html', {'form': form})
+
+def cinema_room_list(request):
+    cinema_rooms = CinemaRoom.objects.all()
+    return render(request, 'cinema_room_list.html', {'cinema_rooms': cinema_rooms})
+
+def update_cinema_room(request, pk):
+    cinema_room = CinemaRoom.objects.get(room_id=pk)
+    if request.method == 'POST':
+        form = CinemaRoomForm(request.POST, instance=cinema_room)
+        if form.is_valid():
+            form.save()
+            return redirect('cinema_room_list')
+    else:
+        form = CinemaRoomForm(instance=cinema_room)
+    return render(request, 'cinema_room_update.html', {'form': form})
+
+# Functions for Food and Drinks
+def food_and_drinks_create(request):
+    if request.method == 'POST':
+        form = FoodAndDrinksForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('food_and_drinks_list')
+    else:
+        form = FoodAndDrinksForm()
+    return render(request, 'food_and_drinks_create.html', {'form': form})
+
+def food_and_drinks_list(request):
+    food_and_drinks = FoodAndBeverage.objects.all()
+    return render(request, 'food_and_drinks_list.html', {'food_and_drinks': food_and_drinks})
+
+def food_and_drinks_update(request, pk):
+    food_and_drinks = FoodAndBeverage.objects.get(combo_id=pk)
+    if request.method == 'POST':
+        form = FoodAndDrinksForm(request.POST, instance=food_and_drinks)
+        if form.is_valid():
+            form.save()
+            return redirect('food_and_drinks_list')
+    else:
+        form = FoodAndDrinksForm(instance=food_and_drinks)
+    return render(request, 'food_and_drinks_update.html', {'form': form})
+
+def food_and_drinks_delete(request, pk):
+    food_and_drinks = FoodAndBeverage.objects.get(combo_id=pk)
+    try:
+        food_and_drinks.delete()
+    except:
+        pass
+    return redirect('food_and_drinks_list')
+
+# Functions for Movie
+def movie_create(request):
+    if request.method == 'POST':
+        form = MovieForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_list')
+    else:
+        form = MovieForm()
+    return render(request, 'movie_create.html', {'form': form})
+
+def movie_list(request):
+    query = request.GET.get('q')
+    if query:
+        movies = Movie.objects.filter(movie_title__icontains=query)
+    else:
+        movies = Movie.objects.all()
+    return render(request, 'movie_list.html', {'movies': movies, 'query': query})
+    
+
+def movie_update(request, pk):
+    movie = Movie.objects.get(movie_id=pk)
+    if request.method == 'POST':
+        form = MovieForm(request.POST, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_list')
+    else:
+        form = MovieForm(instance=movie)
+    return render(request, 'movie_update.html', {'form': form})
+
+# Functions for Movie Session
+def movie_session_create(request):
+    if request.method == 'POST':
+        form = MovieSessionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_session_list')
+    else:
+        form = MovieSessionForm()
+    return render(request, 'movie_session_create.html', {'form': form})
+
+def movie_session_list(request):
+    query = request.GET.get('q')
+    now = timezone.now()
+    if query:
+        movie_sessions = MovieSession.objects.filter(
+            Q(movie_id__movie_title__icontains=query) |
+            Q(room_id__room_name__icontains=query))
+    else:
+        movie_sessions = MovieSession.objects.all()
+    return render(request, 'movie_session_list.html', {'movie_sessions': movie_sessions, 'query': query, 'now': now})
+
+def movie_session_update(request, pk):
+    movie_session = MovieSession.objects.get(session_id=pk)
+    if request.method == 'POST':
+        form = MovieSessionForm(request.POST, instance=movie_session)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_session_list')
+    else:
+        form = MovieSessionForm(instance=movie_session)
+    return render(request, 'movie_session_update.html', {'form': form})
+
+def movie_session_delete(request, pk):
+    movie_session = MovieSession.objects.get(session_id=pk)
+    try:
+        movie_session.delete()
+    except:
+        pass
+    return redirect('movie_session_list')
+
+# Functions for Seat
+def seat_create(request):
+    if request.method == 'POST':
+        form = SeatForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('seat_list')
+    else:
+        form = SeatForm()
+    return render(request, 'seat_create.html', {'form': form})
+
+def seat_list(request):
+    seats = Seat.objects.all()
+    return render(request, 'seat_list.html', {'seats': seats})
+
+def seat_update(request, pk):
+    seat = Seat.objects.get(seat_id=pk)
+    if request.method == 'POST':
+        form = SeatForm(request.POST, instance=seat)
+        if form.is_valid():
+            form.save()
+            return redirect('seat_list')
+    else:
+        form = SeatForm(instance=seat)
+    return render(request, 'seat_update.html', {'form': form})
+
+def seat_delete(request, pk):
+    seat = Seat.objects.get(seat_id=pk)
+    try:
+        seat.delete()
+    except:
+        pass
+    return redirect('seat_list')
+
+# Functions for Report
+def report_page(request):
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            tickets = Ticket.objects.filter(purchased_date__range=[start_date, end_date])
+            sales = Ticket.objects.filter(purchased_date__range=[start_date, end_date]).count()
+            revenue = sum(ticket.cost for ticket in tickets)
+            template = get_template('report.html')
+            context = {'tickets': tickets, 'revenue': revenue, 'sales': sales, 'start_date': start_date, 'end_date': end_date}
+            html = template.render(context)
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+            pisa.CreatePDF(html, dest=response)
+            return response
+    else:
+        form = ReportForm()
+    return render(request, 'report_page.html', {'form': form})
+    
+    
+
+

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Movie Session List</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <form method="get">
+                    <input type="text" name="q" placeholder="Search Movie or Room" value="{{ query }}">
+                    <button type="submit">Search</button>
+                </form>
+            </tr>
+            <tr>
+				<th scope="col">Session ID</th>
+                <th scope="col">Movie Title</th>
+                <th scope="col">Room</th>
+                <th scope="col">Starting</th>
+                <th scope="col">Status</th>
+                <th scope="col"><a type="button" class="btn btn-success" href="{%url 'movie_session_create' %}">Create</a></th>
+            </tr>
+        </thead>
+        {% if movie_sessions %}
+            <tbody>
+                {% for movie_session in movie_sessions %}
+                <tr>
+                    <td>{{ movie_session.session_id }}</td>
+                    <td>{{ movie_session.movie_id.movie_title }}</td>
+                    <td>{{ movie_session.room_id.room_name }}</td>
+                    <td>{{ movie_session.start_time }}</td>
+                    {% if movie_session.start_time > now %}
+                        <td>Upcoming</td>
+                    {% else %}
+                        <td>Ended</td>
+                    {% endif %}
+                    <td><a type="button" class="btn btn-warning" href="/movie_session_update/{{ movie_session.session_id }}">Update</a>
+                        <a type="button" class="btn btn-danger" href="/movie_session_delete/{{ movie_session.session_id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <p>No Movie Sessions found</p>
+        {% endif %}
+    </table>
+    <!-- <a type="button" class="btn btn-success" href="{%url 'cinema_room_create' %}">Create</a> -->
+</div>
+{% endblock %}

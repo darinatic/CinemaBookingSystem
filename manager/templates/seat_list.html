@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Seat List</h4>
+    <table class="table">
+        <thead>
+            <!-- <tr>
+                <form method="get">
+                    <input type="text" name="q" placeholder="Search Movie or Room" value="{{ query }}">
+                    <button type="submit">Search</button>
+                </form>
+            </tr> -->
+            <tr>
+				<th scope="col">Seat ID</th>
+                <th scope="col">Room Name</th>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Session Time</th>
+                <th scope="col">Seat</th>
+                <th scope="col">Status</th>
+                <th scope="col"><a type="button" class="btn btn-success" href="{%url 'seat_create' %}">Create</a></th>
+            </tr>
+        </thead>
+            <tbody>
+                {% for seat in seats %}
+                <tr>
+                    <td>{{ seat.seat_id }}</td>
+                    <td>{{ seat.room_id.room_name }}</td>
+                    <td>{{ seat.session_id.movie_id.movie_title }}</td>
+                    <td>{{ seat.session_id.start_time }}</td>
+                    <td>{{ seat.seat_row }}-{{ seat.seat_number }}</td>
+                    {% if seat.is_available == 1 %}
+                        <td>Available</td>
+                    {% else %}
+                        <td>Reserved</td>
+                    {% endif %}
+                    <td><a type="button" class="btn btn-warning" href="/seat_update/{{ seat.seat_id }}">Update</a>
+                        <a type="button" class="btn btn-danger" href="/seat_delete/{{ seat.seat_id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+    <!-- <a type="button" class="btn btn-success" href="{%url 'cinema_room_create' %}">Create</a> -->
+</div>
+{% endblock %}
