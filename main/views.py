@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Movie, MovieSession, CinemaRoom
+from .models import Movie, MovieSession, CinemaRoom, Ticket
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -20,13 +20,13 @@ def mainPage(response):
     if CinemaRoom.objects.count() == 0:
         cr = CinemaRoom.objects.create(room_name="Room 1")
         cr.save()
-        
+           
     movies = Movie.objects.all()
     
     for movie in movies:    
-        
-        movie_session = MovieSession (movie_id= movie, room_id = CinemaRoom.objects.get(room_id = 1), start_time = datetime.now())
-        movie_session.save()
+        if MovieSession.objects.filter(movie_id = movie).count() == 0:
+            movie_session = MovieSession (movie_id= movie, room_id = CinemaRoom.objects.get(room_id = 1), start_time = datetime.now())
+            movie_session.save()
         
     sessions = MovieSession.objects.all()
     return render(response, 'CinemaCustomerPages/home.html', {'movies': movies, 'sessions': sessions})
@@ -43,8 +43,8 @@ def addtoCart(request):
     
 def ticketcart(request):
     data = request.session.get("cart")
-    tickets = json.loads(data) if data else []
-    context = {"tickets": tickets}
+    tickets = json.loads(data) if data else [] 
+    context = {"tickets": json.dumps(tickets)}
     
     return render(request, "CinemaCustomerPages/ticketcart.html", context)
 
@@ -59,9 +59,10 @@ def updateCart(request):
 def checkout(request):
     data = request.GET.get("data")
     tickets = json.loads(data) if data else []
-    
-    return redirect("/ticketcart")
+    return render(request, "CinemaCustomerPages/myPurchasedTickets.html", {"tickets" : json.dumps(tickets)})
 
-def test(response):
-    return render(response, 'test.html', {})
+def purchaseTickets(request):
+    pass
+
+
 
