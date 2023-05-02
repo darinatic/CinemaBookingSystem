@@ -4,7 +4,7 @@
     CinemaHomePage
 {% endblock %}
 
-
+{% load static %}
 
 
 {% block content %}
@@ -347,10 +347,7 @@ tr{
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $("#myTab li:eq(1) a").tab("show");
-    });
-    
-    
+    console.log({{sessions|safe}});
 </script>
 {% endblock %}
+

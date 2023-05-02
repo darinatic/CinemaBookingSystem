@@ -3,7 +3,7 @@ from main .models import CinemaRoom, FoodAndBeverage, Movie, MovieSession, Ticke
 
 class CinemaRoomForm(forms.ModelForm):
     room_name = forms.CharField(label='Name')
-    room_seat = forms.IntegerField(label='Total Seats')
+    total_seat = forms.IntegerField(label='Total Seats')
     class Meta:
         model = CinemaRoom
         fields = '__all__'

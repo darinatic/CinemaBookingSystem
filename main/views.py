@@ -3,6 +3,7 @@ from .models import Movie, MovieSession, CinemaRoom, Ticket
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.core import serializers
 import json
 
 # Create your views here.
@@ -27,9 +28,15 @@ def mainPage(response):
         if MovieSession.objects.filter(movie_id = movie).count() == 0:
             movie_session = MovieSession (movie_id= movie, room_id = CinemaRoom.objects.get(room_id = 1), start_time = datetime.now())
             movie_session.save()
-        
-    sessions = MovieSession.objects.all()
-    return render(response, 'CinemaCustomerPages/home.html', {'movies': movies, 'sessions': sessions})
+    
+    sessions = MovieSession.objects.select_related('movie_id').all().values('movie_id__movie_id', 'movie_id__movie_title', 'movie_id__movie_duration', 'movie_id__movie_genre','movie_id__movie_img', 'movie_id__movie_description' ,'movie_id__is_active', 'room_id__room_id', 'room_id__room_name', 'start_time')
+    sessions_list = list(sessions)
+    
+    for session in sessions_list:
+        session['start_time'] = session['start_time'].strftime("%Y-%m-%d %H:%M:%S")
+    sessions_json = json.dumps(sessions_list)
+    return render(response, 'CinemaCustomerPages/home.html', {'movies': movies, 'sessions': sessions_json})
+
 
 def movie_details(response, movie_id):
     movie = Movie.objects.get(movie_id=movie_id)
