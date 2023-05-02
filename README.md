@@ -3,14 +3,33 @@ Website for booking cinema Ticket
 CinemaBookingSystem
 Website for booking cinema Ticket
 
-To run the app, open the cmd, change the directory to where the manage.py is that is cinemasystembooking/manage.py and enter python manage.py runserver.
+# To run the app, open the cmd, change the directory to where the manage.py is in (CinemaBookingSystem/manage.py) 
 
-If there are missing modules, run these lines by lines, on the same directory (folder path).
+# create a virtual environment, 'myenv' is the name of the environment
 
-Crispy_form
+py -m venv myenv
+
+# run the virtual environment
+
+myenv\scripts\activate
+
+# Install Django
+
+pip install django
+
+# Crispy_form
 
 pip install django-crispy-forms
 
-Bootstrap 5
+# Bootstrap 5
 
 pip install django-bootstrap-v5
+
+# Crispy Boostrap 5
+
+pip install crispy-bootstrap5
+
+# xhtml2pdf
+
+pip install xhtml2pdf
+

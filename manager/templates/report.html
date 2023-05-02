@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid black;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      th {
+        background-color: #4CAF50;
+        color: white;
+        font-size: large;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .revenue, .sales {
+        font-weight: bold;
+      }
+      h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tickets list and Revenue Report for {{ start_date }} to {{ end_date }} </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Ticket Type</th>
+                <th>Customer Username</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.ticket_id }}</td>
+                <td>{{ ticket.ticket_type }}</td>
+                <td>{{ ticket.user_id.username}}</td>
+                <td>{{ ticket.cost }}</td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td colspan="3">Sales:</td>
+                <td class="revenue">{{ sales }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">Revenue:</td>
+                <td class="revenue">{{ revenue }}</td>
+            </tr>
+        </tbody>
+    </table>
+  </body>
+</html>

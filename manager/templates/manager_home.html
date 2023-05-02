@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}
+    Cinema Manager Home
+{% endblock %}
+{% block content %}
+    <p>Use the links provided to access Cinema Management System</p>
+    <ul>
+        <li><a href="{% url 'movie_list' %}">Movie List</a></li>
+        <li><a href="{% url 'cinema_room_list' %}">Cinema Room List</a></li>
+        <li><a href="{% url 'movie_session_list' %}">Movie Session List</a></li>
+        <li><a href="{% url 'food_and_drinks_list' %}">Food and Drinks List</a></li>
+        <li><a href="{% url 'seat_list' %}">Seats</a></li>
+        <li><a href="{% url 'report_page' %}">Generate Report</a></li>
+        
+    </ul>
+{% endblock %}

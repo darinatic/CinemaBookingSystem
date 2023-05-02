@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Movie List</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <form method="get">
+                    <input type="text" name="q" placeholder="Search Movie Title" value="{{ query }}">
+                    <button type="submit">Search</button>
+                </form>
+            </tr>
+            <tr>
+				<th scope="col">Movie ID</th>
+                <th scope="col">Movie Title</th>
+                <th scope="col">Movie Description</th>
+                <th scope="col">Genre</th>
+                <th scope="col">Duration</th>
+                <!-- <th scope="col">Image Link</th> -->
+                <th scope="col">Status</th>
+                <th scope="col"><a type="button" class="btn btn-success" href="{%url 'movie_create' %}">Create</a></th>
+            </tr>
+        </thead>
+        {% if movies %}
+            <tbody>
+                {% for movie in movies %}
+                <tr>
+                    <td>{{ movie.movie_id }}</td>
+                    <td>{{ movie.movie_title }}</td>
+                    <td>{{ movie.movie_description }}</td>
+                    <td>{{ movie.movie_genre }}</td>
+                    <td>{{ movie.movie_duration }}</td>
+                    <!-- <td>{{ movie.movie_image }}</td> -->
+                    {% if movie.is_active == 1 %}
+                        <td>ACTIVE</td>
+                    {% else %}
+                        <td>INACTIVE</td>
+                    {% endif %}
+                    <td><a type="button" class="btn btn-warning" href="/movie_update/{{ movie.movie_id }}">Update</a>
+                        <!-- <a type="button" class="btn btn-danger" href="/book-delete/{{ book.id }}">Delete</a> -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <p>No movies found</p>
+        {% endif %}
+    </table>
+    <!-- <a type="button" class="btn btn-success" href="{%url 'cinema_room_create' %}">Create</a> -->
+</div>
+{% endblock %}

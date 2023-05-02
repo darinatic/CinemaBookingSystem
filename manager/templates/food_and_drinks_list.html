@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Food and Drinks List</h4>
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Combo ID</th>
+                <th scope="col">Combo Name</th>
+                <th scope="col">Combo Price</th>
+                <th scope="col"><a type="button" class="btn btn-success" href="{%url 'food_and_drinks_create' %}">Create</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for food_and_drink in food_and_drinks %}
+            <tr>
+                <td>{{ food_and_drink.combo_id }}</td>
+                <td>{{ food_and_drink.combo_name }}</td>
+                <td>{{ food_and_drink.combo_price }}</td>
+                <td><a type="button" class="btn btn-warning" href="/food_and_drinks_update/{{ food_and_drink.combo_id }}">Update</a>
+                    <a type="button" class="btn btn-danger" href="/food_and_drinks_delete/{{ food_and_drink.combo_id }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- <a type="button" class="btn btn-success" href="{%url 'food_and_drinks_create' %}">Create</a> -->
+</div>
+{% endblock %}
