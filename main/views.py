@@ -25,7 +25,7 @@ def mainPage(response):
     movies = Movie.objects.all()
     
     for movie in movies:    
-        if MovieSession.objects.filter(movie_id = movie).count() == 0:
+        if MovieSession.objects.filter(movie_id = movie).count() == 0 and movie.is_active == True:
             movie_session = MovieSession (movie_id= movie, room_id = CinemaRoom.objects.get(room_id = 1), start_time = datetime.now())
             movie_session.save()
     

@@ -417,7 +417,7 @@
 
                     const a = document.createElement("a");
                     a.classList.add("btn", "btn-primary");
-                    a.setAttribute("href", "{% url 'movie_details' 1 %}");
+                    a.setAttribute("href", "movie_details/" + session.movie_id__movie_id);
                     a.innerText = "See Movie";
 
                     primaryBtn.appendChild(a);
