@@ -11,7 +11,7 @@ class Movie(models.Model):
     movie_title = models.CharField(max_length=200, default="John Wick")
     movie_description = models.TextField(max_length=250, default="John is very angry")
     movie_genre = models.CharField(max_length=50, default="Action") 
-    movie_duration = models.CharField(max_length=20,default="2:00")
+    movie_duration = models.FloatField(max_length=20,default=2)
     movie_img = models.TextField(default=JOHN_WICK_IMAGE)
     is_active = models.BooleanField(default=True)
  

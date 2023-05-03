@@ -35,7 +35,7 @@ def mainPage(response):
     for session in sessions_list:
         session['start_time'] = session['start_time'].strftime("%Y-%m-%d %H:%M:%S")
     sessions_json = json.dumps(sessions_list)
-    return render(response, 'CinemaCustomerPages/home.html', {'movies': movies, 'sessions': sessions_json})
+    return render(response, 'CinemaCustomerPages/home.html', {'movies': movies,'sessions' : sessions , 'sessions_json': sessions_json})
 
 
 def movie_details(response, movie_id):
