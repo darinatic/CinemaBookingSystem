@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .models import Movie, MovieSession, CinemaRoom, Ticket
+from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -38,11 +38,28 @@ def mainPage(response):
     return render(response, 'CinemaCustomerPages/home.html', {'movies': movies,'sessions' : sessions , 'sessions_json': sessions_json})
 
 
-def movie_details(response, movie_id):
-    movie = Movie.objects.get(movie_id=movie_id)
-    movie_json = json.dumps(model_to_dict(movie))
-    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'movie_json': movie_json})
-
+def movie_details(response, session_id):
+    
+    session = MovieSession.objects.select_related('movie_id','room_id').get(session_id=session_id)
+    movie = session.movie_id
+    room = session.room_id
+    session_dict = model_to_dict(session)
+    session_dict['start_time'] = session_dict['start_time'].strftime("%Y-%m-%d %H:%M:%S")
+    session_dict['movie'] = model_to_dict(movie)
+    session_dict['room'] = model_to_dict(room)
+    
+    
+    seats = list (Seat.objects.filter(room_id = room).values('seat_id', 'seat_row', 'seat_number', 'is_available'))
+    
+    for seat in seats:
+        seat['session_id'] = session_id
+    
+    session_dict['seats'] = seats
+    
+    session_json = json.dumps(session_dict)
+    
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json})
+    
 def addtoCart(request):
     if request.method == "POST":
         json_data = json.loads(request.body)

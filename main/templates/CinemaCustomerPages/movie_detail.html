@@ -356,14 +356,20 @@
                             const table = document.querySelector(".table");
                             const newRow = table.insertRow();
 
-                            const movieJson = "{{ movie_json|escapejs }}";
-                            const movieObj = JSON.parse(movieJson);
+                            // const movieJson = "{{ movie_json|escapejs }}";
+                            // const movieObj = JSON.parse(movieJson);
 
                             let addTicketsOnReload = true;
 
                             populateUI();
 
                             let ticketPrice = + movieSelect.value;
+                            
+                            const sessionJSON = "{{ session_json|escapejs }}";
+                            const sessionObj = JSON.parse(sessionJSON);
+
+                            const movieObj = sessionObj.movie;
+                            console.log(movieObj);
 
                             // Save selected movie index and price
                             function setMovieData(movieIndex, moviePrice) {
