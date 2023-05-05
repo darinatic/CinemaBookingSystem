@@ -358,7 +358,7 @@
 
                             const movieJson = "{{ movie_json|escapejs }}";
                             const movieObj = JSON.parse(movieJson);
-                            
+
                             let addTicketsOnReload = true;
 
                             populateUI();
@@ -376,7 +376,7 @@
                                 const selectedSeats = document.querySelectorAll(".row .seat.selected");
 
                                 const seatsIndex = [... selectedSeats].map((seat) => [... seats].indexOf(seat));
-                                
+
                                 localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
 
                                 if (addTicketsOnReload) {
@@ -482,9 +482,8 @@
                             });
 
                             addToCartBtn.addEventListener("click", () => {
-                                
-                                
-                                
+
+
                                 const rows = table.rows;
                                 const seats = [];
 
@@ -494,21 +493,34 @@
                                     const price = rows[i].querySelector(".ticket-price").innerText;
                                     seats.push({seat, price});
                                 }
-                                
+
                                 const data = {
                                     "movie": movieObj,
-                                    "seat": seats
+                                    "seats": seats
                                 };
-                                
-                                const params = new URLSearchParams();
-                                params.set("data", JSON.stringify(data));
 
-                                const url = "{% url 'addtoCart' %}?" + params.toString();
-                                window.location.href = url;
-                            });
-
-                            // Initial count and total set
+                                fetch("{% url 'addtoCart' %}", {
+                                    method: 'POST',
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
+                                        'X-CSRFToken': "{{ csrf_token }}"
+                                    },
+                                    body: JSON.stringify({
+                                        "data":data
+                                    })
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        window.location.href = '{% url "ticketcart" %}';
+                                    } else {
+                                        throw new Error('Something went wrong');
+                                    }
+                                })
+                            }); // Initial count and total set
                             updateSelectedCount();
                         </script>
+
 
                     {% endblock %}

@@ -265,7 +265,7 @@
                 const movieDescription = tickets.movie.movie_description;
 
 
-                tickets.seat.forEach((seat) => {
+                tickets.seats.forEach((seat) => {
                     createNewTicket(seat);
                 });
 
@@ -367,7 +367,7 @@
                     let subtotal = 0;
                     let tax = 0;
                     let finalPrice = 0;
-                    tickets.seat.forEach((seat) => {
+                    tickets.seats.forEach((seat) => {
                         total += 5;
                         foodTotal += 1;
                         subtotal = total + foodTotal;
@@ -383,7 +383,7 @@
 
                 function cancelTicket(event) {
                     const card = event.target.closest(".card");
-                    const index = Array.from(card.parentNode.children).indexOf(card);
+
                     tickets.seat.splice(index, 1);
                     card.remove();
                     calculateTotalPrice();
@@ -404,15 +404,27 @@
                 document.getElementById("checkoutBtn").addEventListener("click", function () {
 
                     const data = {
-                        "tickets": tickets, 
+                        "tickets": tickets
                     };
 
-                    const params = new URLSearchParams();
-                    params.set("data", JSON.stringify(data));
-
-                    const url = "{% url 'checkout' %}?" + params.toString();
-                    window.location.href = url;
+                    fetch("{% url 'checkout' %}", {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
+                            'X-CSRFToken': "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify(
+                            {"data": data}
+                        )
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '{% url "checkOutCart" %}';
+                        } else {
+                            throw new Error('Something went wrong');
+                        }
+                    })
                 });
-
             </script>
         {% endblock %}

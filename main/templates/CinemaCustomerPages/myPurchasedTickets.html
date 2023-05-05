@@ -229,7 +229,7 @@
         const movieDescription = tickets.movie.movie_description;
 
 
-        tickets.seat.forEach((seat) => {
+        tickets.seats.forEach((seat) => {
             createNewTicket(seat);
         });
 
@@ -299,16 +299,13 @@
             evenInfo.appendChild(i2);
             evenInfo.appendChild(p);
 
-            // create a new a element with the text "tickets"
-            const btn = document.createElement("button");
-            btn.classList.add("cancelBtn", "btn");
-            btn.textContent = "Cancel Ticket";
+            
 
             // append the small, h3, even-date, even-info, and a elements to the card-cont section
             cardCont.appendChild(h3);
             cardCont.appendChild(evenDate);
             cardCont.appendChild(evenInfo);
-            cardCont.appendChild(btn);
+            
 
             // append the date and card-cont sections to the card article
             card.appendChild(date);
