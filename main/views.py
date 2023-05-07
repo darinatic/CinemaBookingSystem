@@ -98,7 +98,7 @@ def checkOutCart(request):
         i = 0
         
         if seat_obj.is_available == False:
-            return HttpResponse("Seat is not available")
+            return redirect("/ticketcart")
         else :
             seat_obj.is_available = False
             seat_obj.save()
@@ -118,6 +118,7 @@ def TicketsPurse(request):
     
     tickets_dict = {}
     for index , ticket in enumerate(user_tickets):
+        ticket.purchased_date = ticket.purchased_date.strftime("%Y-%m-%d %H:%M:%S")
         tickets_dict[str(index)] = model_to_dict(ticket)
         tickets_dict[str(index)]["movie_session"] = model_to_dict(ticket.movie_session)
         tickets_dict[str(index)]["movie_session"]["start_time"] = tickets_dict[str(index)]["movie_session"]["start_time"].strftime("%Y-%m-%d %H:%M:%S")
