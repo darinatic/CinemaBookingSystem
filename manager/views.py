@@ -1,15 +1,41 @@
 from django.http import HttpResponse
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from manager.forms import CinemaRoomForm, FoodAndDrinksForm, MovieForm, MovieSessionForm, ReportForm, SeatForm
-from main.models import CinemaRoom, FoodAndBeverage, Movie, MovieSession, Ticket, Seat
+from manager.forms import *
+from main.models import *
+
+# Logout
+def my_logout(request):
+    logout(request)
+    return redirect('/login')
 
 # Functions for Main Page
 def manager_home(request):
     return render(request, 'manager_home.html')
+
+# Functions for User Profile
+@login_required
+def user_profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='user_profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    return render(request, 'user_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 # Functions for Cinema Room
 def create_cinema_room(request):
@@ -17,6 +43,7 @@ def create_cinema_room(request):
         form = CinemaRoomForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Cinema Room created successfully')
             return redirect('cinema_room_list')
     else:
         form = CinemaRoomForm()
@@ -32,6 +59,7 @@ def update_cinema_room(request, pk):
         form = CinemaRoomForm(request.POST, instance=cinema_room)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Cinema Room updated successfully')
             return redirect('cinema_room_list')
     else:
         form = CinemaRoomForm(instance=cinema_room)
@@ -43,28 +71,30 @@ def food_and_drinks_create(request):
         form = FoodAndDrinksForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Food and Drinks created successfully')
             return redirect('food_and_drinks_list')
     else:
         form = FoodAndDrinksForm()
     return render(request, 'food_and_drinks_create.html', {'form': form})
 
 def food_and_drinks_list(request):
-    food_and_drinks = FoodAndBeverage.objects.all()
+    food_and_drinks = FoodAndDrinks.objects.all()
     return render(request, 'food_and_drinks_list.html', {'food_and_drinks': food_and_drinks})
 
 def food_and_drinks_update(request, pk):
-    food_and_drinks = FoodAndBeverage.objects.get(combo_id=pk)
+    food_and_drinks = FoodAndDrinks.objects.get(combo_id=pk)
     if request.method == 'POST':
         form = FoodAndDrinksForm(request.POST, instance=food_and_drinks)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Food and Drinks updated successfully')
             return redirect('food_and_drinks_list')
     else:
         form = FoodAndDrinksForm(instance=food_and_drinks)
     return render(request, 'food_and_drinks_update.html', {'form': form})
 
 def food_and_drinks_delete(request, pk):
-    food_and_drinks = FoodAndBeverage.objects.get(combo_id=pk)
+    food_and_drinks = FoodAndDrinks.objects.get(combo_id=pk)
     try:
         food_and_drinks.delete()
     except:
@@ -77,6 +107,7 @@ def movie_create(request):
         form = MovieForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Movie created successfully')
             return redirect('movie_list')
     else:
         form = MovieForm()
@@ -97,6 +128,7 @@ def movie_update(request, pk):
         form = MovieForm(request.POST, instance=movie)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Movie updated successfully')
             return redirect('movie_list')
     else:
         form = MovieForm(instance=movie)
@@ -108,6 +140,7 @@ def movie_session_create(request):
         form = MovieSessionForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Movie Session created successfully')
             return redirect('movie_session_list')
     else:
         form = MovieSessionForm()
@@ -130,6 +163,7 @@ def movie_session_update(request, pk):
         form = MovieSessionForm(request.POST, instance=movie_session)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Movie Session updated successfully')
             return redirect('movie_session_list')
     else:
         form = MovieSessionForm(instance=movie_session)
@@ -149,6 +183,7 @@ def seat_create(request):
         form = SeatForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Seat created successfully')
             return redirect('seat_list')
     else:
         form = SeatForm()
@@ -164,6 +199,7 @@ def seat_update(request, pk):
         form = SeatForm(request.POST, instance=seat)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Seat updated successfully')
             return redirect('seat_list')
     else:
         form = SeatForm(instance=seat)
@@ -198,6 +234,6 @@ def report_page(request):
         form = ReportForm()
     return render(request, 'report_page.html', {'form': form})
     
-    
+
 
 

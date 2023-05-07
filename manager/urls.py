@@ -1,9 +1,18 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
+    # logout
+    path('logout/', views.my_logout, name='logout'),
+
     # main page
     path('manager_home/', views.manager_home, name='manager_home'),
+
+    # user profile
+    path('user_profile/', views.user_profile, name='user_profile'),
 
     # report page
     path('report_page/', views.report_page, name='report_page'),
@@ -35,4 +44,4 @@ urlpatterns = [
     path('seat_list/', views.seat_list, name='seat_list'),
     path('seat_update/<int:pk>/', views.seat_update, name='seat_update'),
     path('seat_delete/<int:pk>/', views.seat_delete, name='seat_delete'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
