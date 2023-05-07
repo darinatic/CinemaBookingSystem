@@ -64,6 +64,8 @@
         }
 
         .seatSelectorCon {
+            margin-top: 10em;
+            margin-bottom: 7em;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -204,24 +206,24 @@
         <div class="row ">
             <div class=" col-4 p-3 m-1 ">
                 <img class="" src={{ movie.movie_img }} alt=""></div>
-                <div class=" col-7  py-3 px-3">
+            <div class=" col-7  py-3 px-3">
                     <h2 class="mt-5">{{ movie.movie_title }}*</h2>
                     <hr>
-                        <h4 class="my-4">Details</h4>
-                        <p class="mt-5">Genre:
-                            {{ movie.movie_genre }}</p>
-                        <p class="py-2">Duration:
-                            {{ movie.movie_duration }}
-                            hrs
-                        </p>
+                    <h4 class="my-4">Details</h4>
+                    <p class="mt-5">Genre:
+                        {{ movie.movie_genre }}
+                    </p>
+                    <p class="py-2">
+                        Duration:{{ movie.movie_duration }}hrs
+                    </p>
 
-                        <h4 class="mt-5">Synosis</h4>
-                        <br>
-                            <p>{{ movie.movie_description }}</p>
-                        </div>
-                    </div>
-                    <hr>
-                        <div class="seatSelectorCon">
+                    <h4 class="mt-5">Synosis</h4>
+                    <br>
+                    <p>{{ movie.movie_description }}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="seatSelectorCon">
                             <section class="seat-section ">
 
                                 <h3>Select the seat u want to purchase</h3>
@@ -245,67 +247,8 @@
                                     <div class="seat-container">
                                         <div class="screen"></div>
 
-                                        <div class="row  justify-content-center justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                        </div>
+                                        
 
-                                        <div class="row  justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                        </div>
-                                        <div class="row  justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat sold"></div>
-                                        </div>
-                                        <div class="row  justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                        </div>
-                                        <div class="row  justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                        </div>
-                                        <div class="row  justify-content-center">
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat sold"></div>
-                                            <div class="seat"></div>
-                                        </div>
                                     </div>
 
                                     <p>Price per Seat :
@@ -338,14 +281,15 @@
                                     </div>
                                 </div>
 
-                            </div>
+        </div>
+        <hr>
 
-                        </div>
+    </div>
 
 
                         <script>
                             const container = document.querySelector(".seat-container");
-                            const seats = document.querySelectorAll(".row .seat:not(.sold)");
+                            let seats = null;
                             const count = document.getElementById("count");
                             const total = document.getElementById("total");
                             const totalPrice = document.getElementById("totalPrice")
@@ -361,15 +305,16 @@
 
                             let addTicketsOnReload = true;
 
-                            populateUI();
 
                             let ticketPrice = + movieSelect.value;
-                            
+
                             const sessionJSON = "{{ session_json|escapejs }}";
                             const sessionObj = JSON.parse(sessionJSON);
 
                             const movieObj = sessionObj.movie;
-                            console.log(movieObj);
+                            console.log(sessionObj);
+
+                            populateUI();
 
                             // Save selected movie index and price
                             function setMovieData(movieIndex, moviePrice) {
@@ -403,6 +348,10 @@
 
                             // Get data from localstorage and populate UI
                             function populateUI() {
+
+                                generateSeats();
+                                setSeatsArray();
+
                                 const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
 
                                 if (selectedSeats !== null && selectedSeats.length > 0) {
@@ -420,6 +369,38 @@
                                 }
                             }
 
+                            function generateSeats() {
+                                const seatObjs = sessionObj.seats;
+                                let seatRowNo = 0;
+                                let seatRow = null;
+
+                                seatObjs.forEach((seat, index) => {
+                                    if (index % 8 === 0) {
+                                        seatRowNo++;
+                                        seatRow = document.createElement("div");
+                                        seatRow.classList.add("row", "justify-content-center");
+                                    }
+
+                                    const seatDiv = document.createElement("div");
+                                    seatDiv.classList.add("seat");
+
+                                    if (seat.is_available === false) {
+                                        seatDiv.classList.add("sold");
+                                    }
+
+                                    seatRow.appendChild(seatDiv);
+
+                                    if ((index + 1) % 8 === 0 || index === seatObjs.length - 1) {
+                                        const seatContainer = document.querySelector(".seat-container");
+                                        seatContainer.appendChild(seatRow);
+                                    }
+                                });
+                            }
+
+                            function setSeatsArray(){
+                                seats = document.querySelectorAll(".row .seat:not(.sold)"); 
+                            }
+
                             function addSeatToCart(index) {
 
                                 const newRow = table.insertRow();
@@ -430,7 +411,7 @@
                                 const price = newRow.insertCell(2);
                                 const button = newRow.insertCell(3);
 
-                                seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + index.toString() + '</p></div>';
+                                seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + (index+1).toString() + '</p></div>';
                                 typeSelect.innerHTML = '<select name="ticket_type" id="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
                                 price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
                                 button.innerHTML = '<div class="ticket-deselect-btn"><button>-</button></div>';
@@ -472,7 +453,7 @@
                                     e.target.classList.toggle("selected");
 
                                     updateSelectedCount();
-                                    console.log(e.target.classList.contains("selected"))
+                                    console.log([... seats].indexOf(e.target));
 
                                     if (e.target.classList.contains("selected")) {
                                         addSeatToCart([... seats].indexOf(e.target));
@@ -501,7 +482,7 @@
                                 }
 
                                 const data = {
-                                    "movie": movieObj,
+                                    "session": sessionObj,
                                     "seats": seats
                                 };
 
@@ -513,11 +494,10 @@
                                         'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
                                         'X-CSRFToken': "{{ csrf_token }}"
                                     },
-                                    body: JSON.stringify({
-                                        "data":data
-                                    })
-                                })
-                                .then(response => {
+                                    body: JSON.stringify(
+                                        {"data": data}
+                                    )
+                                }).then(response => {
                                     if (response.ok) {
                                         window.location.href = '{% url "ticketcart" %}';
                                     } else {

@@ -219,22 +219,24 @@
         const ticketCart = document.querySelector(".ticketCard");
 
         // This is fine, don't touch it, it's just a list of tickets from movie seat checkout
-        let tickets = {{ tickets|safe }}.tickets;
+        let tickets = {{ tickets|safe }};
         
-
-        const movieName = tickets.movie.movie_title;
-        const movieGenre = tickets.movie.movie_genre;
-        const movieDuration = tickets.movie.movie_duration;
-        // const movieImg = tickets.movie.movie_img;
-        const movieDescription = tickets.movie.movie_description;
-
-
-        tickets.seats.forEach((seat) => {
-            createNewTicket(seat);
+        console.log(tickets);
+        
+        
+        Object.values(tickets).forEach(ticket => {
+            createNewTicket(ticket);
         });
-
+       
         // function to create a new ticket card
-        function createNewTicket(seat) { // create a new article element with the class "card"
+        function createNewTicket(ticket) { // create a new article element with the class "card"
+
+            let movie = ticket.movie_session.movie_id;
+            let movieName = movie.movie_title;
+            let movieGenre = movie.movie_genre;
+            let movieDuration = movie.movie_duration;
+            let movieDescription = movie.movie_description;
+
             const card = document.createElement("article");
             card.classList.add("card");
 

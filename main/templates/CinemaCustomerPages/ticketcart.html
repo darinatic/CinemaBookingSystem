@@ -254,20 +254,30 @@
                 // Add a new ticket card when u click on the button
                 const ticketCart = document.querySelector(".ticketCard");
 
-                // This is fine, don't touch it, it's just a list of tickets from movie seat checkout
-                let tickets = {{ tickets|safe }};
+                
+                let tickets = {{ tickets | safe }};
                 console.log(tickets);
 
-                const movieName = tickets.movie.movie_title;
-                const movieGenre = tickets.movie.movie_genre;
-                const movieDuration = tickets.movie.movie_duration;
-                // const movieImg = tickets.movie.movie_img;
-                const movieDescription = tickets.movie.movie_description;
+                const movie = tickets.session.movie;
+                const movieName = movie.movie_title;
+                const movieGenre = movie.movie_genre;
+                const movieDuration = movie.movie_duration;
+                // const movieImg = movie.movie_img;
+                const movieDescription = movie.movie_description;
 
 
                 tickets.seats.forEach((seat) => {
                     createNewTicket(seat);
                 });
+
+                const cards = document.querySelectorAll(".card");
+                const cardIndexes = [];
+                cards.forEach((card, index) => {
+                    cardIndexes.push(index);
+                    card.dataset.index = index;
+                    card.querySelector(".cancelBtn").addEventListener("click", cancelTicket);
+                });
+
 
                 // function to create a new ticket card
                 function createNewTicket(seat) { // create a new article element with the class "card"
@@ -340,6 +350,7 @@
                     btn.classList.add("cancelBtn", "btn");
                     btn.textContent = "Cancel Ticket";
 
+
                     // append the small, h3, even-date, even-info, and a elements to the card-cont section
                     cardCont.appendChild(h3);
                     cardCont.appendChild(evenDate);
@@ -381,26 +392,28 @@
                     document.getElementById("finalPrice").innerHTML = "$" + finalPrice;
                 }
 
+
                 function cancelTicket(event) {
                     const card = event.target.closest(".card");
-
-                    tickets.seat.splice(index, 1);
+                    const seatIndex = card.dataset.index;
                     card.remove();
-                    calculateTotalPrice();
+                    tickets.seats.splice(seatIndex, 1);
 
-                    // Send updated tickets to the server
-                    const xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/updateCart/");
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    const data = "data=" + encodeURIComponent(JSON.stringify(tickets));
-                    xhr.send(data);
+                    calculateTotalPrice();
+                    saveTickets(tickets);
+
+                    if (tickets.seats.length === 0) {
+                        document.querySelector(".ticketCart").innerHTML = "<h1>Cart is empty</h1>";
+                    }
+                }
+                
+                function saveTickets(tickets) {
+                    localStorage.setItem("tickets", JSON.stringify(tickets));
                 }
 
                 calculateTotalPrice();
                 // add a click event listener to the "Add Card" button
                 document.querySelector(".addTicket").addEventListener("click", createNewTicket);
-                document.querySelector(".cancelBtn").addEventListener("click", cancelTicket);
-
                 document.getElementById("checkoutBtn").addEventListener("click", function () {
 
                     const data = {

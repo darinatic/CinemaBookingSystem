@@ -29,7 +29,7 @@ class CinemaRoom(models.Model):
     room_id = models.AutoField(primary_key=True, auto_created=True, null=False) 
     room_name = models.CharField(max_length=20, default="Room 1")
     total_seat = models.IntegerField(default=100)
- 
+    
     def __str__(self): 
         return self.room_name
     

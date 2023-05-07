@@ -90,12 +90,44 @@ def checkout(request):
         
 def checkOutCart(request):
     data = request.session.get("checkout")
-    tickets = json.loads(json.dumps(data)) if data else []
-    context = {"tickets": json.dumps(tickets)}
-    return render(request, "CinemaCustomerPages/myPurchasedTickets.html", context)
+    data_json = json.loads(json.dumps(data)) if data else []
+      
+    for seat in data_json["tickets"]["seats"]:
+        
+        seat_obj = Seat.objects.get(seat_id=  int(seat["seat"])+1)
+        i = 0
+        
+        if seat_obj.is_available == False:
+            return HttpResponse("Seat is not available")
+        else :
+            seat_obj.is_available = False
+            seat_obj.save()
+            
+            if not Ticket.objects.filter(seat_id = seat_obj).count() > 0:
+                movie_session = MovieSession.objects.get(session_id = data_json["tickets"]["session"]["session_id"])
+                ticket = Ticket.objects.create(movie_session = movie_session, seat_id = seat_obj, user_id = request.user)
+                ticket.save()
+    
+    return redirect("/TicketsPurse")
 
-def purchaseTickets(request):
-    pass
+
+
+def TicketsPurse(request):
+    
+    user_tickets = Ticket.objects.filter(user_id = request.user).select_related("movie_session", "seat_id")
+    
+    tickets_dict = {}
+    for index , ticket in enumerate(user_tickets):
+        tickets_dict[str(index)] = model_to_dict(ticket)
+        tickets_dict[str(index)]["movie_session"] = model_to_dict(ticket.movie_session)
+        tickets_dict[str(index)]["movie_session"]["start_time"] = tickets_dict[str(index)]["movie_session"]["start_time"].strftime("%Y-%m-%d %H:%M:%S")
+        tickets_dict[str(index)]["movie_session"]["movie_id"] = model_to_dict(ticket.movie_session.movie_id)
+        tickets_dict[str(index)]["seat_id"] = model_to_dict(ticket.seat_id)
+        
+    
+    context = {"tickets": json.dumps(tickets_dict)}
+    
+    return render(request, "CinemaCustomerPages/myPurchasedTickets.html", context=context)
 
 def test(request, session_id):
     session = MovieSession.objects.get(session_id=session_id)
