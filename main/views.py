@@ -48,6 +48,9 @@ def movie_details(response, session_id):
     session_dict['movie'] = model_to_dict(movie)
     session_dict['room'] = model_to_dict(room)
     
+    if Seat.objects.filter(room_id = room).count() == 0:
+        room.create_seats()
+    
     
     seats = list (Seat.objects.filter(room_id = room).values('seat_id', 'seat_row', 'seat_number', 'is_available'))
     
