@@ -50,7 +50,11 @@ def create_cinema_room(request):
     return render(request, 'cinema_room_create.html', {'form': form})
 
 def cinema_room_list(request):
-    cinema_rooms = CinemaRoom.objects.all()
+    query = request.GET.get('q')
+    if query:
+        cinema_rooms = CinemaRoom.objects.filter(room_name__icontains=query)
+    else:
+        cinema_rooms = CinemaRoom.objects.all()
     return render(request, 'cinema_room_list.html', {'cinema_rooms': cinema_rooms})
 
 def update_cinema_room(request, pk):
