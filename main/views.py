@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat
+from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat, FoodAndDrinks
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -73,7 +73,10 @@ def addtoCart(request):
 def ticketcart(request):
     data = request.session.get("cart")
     tickets = json.loads(json.dumps(data)) if data else [] 
-    context = {"tickets": json.dumps(tickets)}
+    
+    foodcombo = FoodAndDrinks.objects.all().values()
+    foodcombo_json = json.dumps(list(foodcombo))
+    context = {"tickets": json.dumps(tickets), "foodcombo": foodcombo_json}
     return render(request, "CinemaCustomerPages/ticketcart.html", context)
 
 @csrf_exempt
@@ -133,14 +136,8 @@ def TicketsPurse(request):
     
     return render(request, "CinemaCustomerPages/myPurchasedTickets.html", context=context)
 
-def test(request, session_id):
-    session = MovieSession.objects.get(session_id=session_id)
-    movie = session.movie_id
-    print(movie)
-    session.movie = movie
-    session.start_time = session.start_time.strftime("%Y-%m-%d %H:%M:%S")
-    session_json = json.dumps(model_to_dict(session))
-    return render(request, 'CinemaCustomerPages/test.html', {'session': session,'session_json': session_json})
+def test(request):
+    return render(request, 'CinemaCustomerPages/test.html')
 
 
 def mainPageAlter(request):

@@ -5,208 +5,244 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Oswald');
-        * {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            box-sizing: border-box
-        }
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Oswald');
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-sizing: border-box
+    }
 
-        body {
-            background-color: #dadde6;
-            font-family: arial
-        }
+    body {
+        background-color: #dadde6;
+        font-family: arial
+    }
 
-        .fl-left {
-            float: left
-        }
+    .fl-left {
+        float: left
+    }
 
-        .fl-right {
-            float: right
-        }
+    .fl-right {
+        float: right
+    }
 
-        h1 {
-            text-transform: uppercase;
-            font-weight: 900;
-            border-left: 10px solid #fec500;
-            padding-left: 10px;
-            margin-bottom: 30px
-        }
+    h1 {
+        text-transform: uppercase;
+        font-weight: 900;
+        border-left: 10px solid #fec500;
+        padding-left: 10px;
+        margin-bottom: 30px
+    }
 
-        .row {
-            overflow: hidden
-        }
+    .row {
+        overflow: hidden
+    }
 
+    .card {
+        display: table-row;
+        width: 100%;
+        height: 15em;
+        background-color: #fff;
+        color: #989898;
+        margin-bottom: 10px;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        border-radius: 4px;
+        position: relative
+    }
+
+    .card+.card {
+        margin-left: 2%
+    }
+
+    .date {
+        display: table-cell;
+        width: 25%;
+        height: 15em;
+        position: relative;
+        text-align: center;
+        border-right: 2px dashed #dadde6
+    }
+
+    .date:before,
+    .date:after {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-color: #DADDE6;
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        z-index: 1;
+        border-radius: 50%
+    }
+
+    .date:after {
+        top: auto;
+        bottom: -15px
+    }
+
+    .date time {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%)
+    }
+
+    .date time span {
+        display: block
+    }
+
+    .date time span:first-child {
+        color: #2b2b2b;
+        font-weight: 600;
+        font-size: 250%
+    }
+
+
+    .card-cont {
+        display: table-cell;
+        width: 75%;
+        height: 15em;
+        font-size: 85%;
+        padding: 10px 10px 30px 50px
+    }
+
+    .card-cont h3 {
+        color: #3C3C3C;
+        font-size: 130%
+    }
+
+
+    .card-cont > div {
+        display: table-row
+    }
+
+    .card-cont .even-date i,
+    .card-cont .even-info i,
+    .card-cont .even-date time,
+    .card-cont .even-info p {
+        display: table-cell
+    }
+
+    .card-cont .even-date i,
+    .card-cont .even-info i {
+        padding: 5% 5% 0 0
+    }
+
+    .card-cont .even-info p {
+        padding: 30px 50px 0 0
+    }
+
+    .card-cont .even-date time span {
+        display: block
+    }
+
+    .card-cont .cancelBtn {
+        display: block;
+        text-decoration: none;
+        width: 100;
+        background-color: red;
+        text-align: center;
+        color: white;
+        border-radius: 2px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px
+    }
+
+
+    @media screen and(max-width: 860px) {
         .card {
-            display: table-row;
+            display: block;
+            float: none;
             width: 100%;
-            height: 15em;
-            background-color: #fff;
-            color: #989898;
-            margin-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            border-radius: 4px;
-            position: relative
+            margin-bottom: 10px
         }
-
         .card+.card {
-            margin-left: 2%
+            margin-left: 0
         }
-
-        .date {
-            display: table-cell;
-            width: 25%;
-            height: 15em;
-            position: relative;
-            text-align: center;
-            border-right: 2px dashed #dadde6
+        .card-cont .even-date,
+        .card-cont .even-info {
+            font-size: 75%
         }
+    }
 
-        .date:before,
-        .date:after {
-            content: "";
-            display: block;
-            width: 30px;
-            height: 30px;
-            background-color: #DADDE6;
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            z-index: 1;
-            border-radius: 50%
-        }
+    .card-selected {
+        background-color: #c41f26;
+        color: white;
+    }
 
-        .date:after {
-            top: auto;
-            bottom: -15px
-        }
+    .card-selected .card-cont h3 {
+        color: white;
+    }
+    .classCheckoutlist {
+        font-size: 2em;
 
-        .date time {
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%)
-        }
+    }
 
-        .date time span {
-            display: block
-        }
+    .classCheckoutlist .row {
+        font-family: 'Oswald', sans-serif;
+        text-align: right;
+        font-size: 1em;
+        font-weight: 600;
+    }
 
-        .date time span:first-child {
-            color: #2b2b2b;
-            font-weight: 600;
-            font-size: 250%
-        }
+    .classCheckoutlist .row .price {
+        text-align: left;
+    }
 
+    #checkoutBtn {
+        position: relative;
+        background: #c41f26;
+        width: 300px;
+        height: 34px;
+        color: white;
+        right: 4%;
 
-        .card-cont {
-            display: table-cell;
-            width: 75%;
-            height: 15em;
-            font-size: 85%;
-            padding: 10px 10px 30px 50px
-        }
+    }
+    .card-fooditemcard {
+        background: #c41f26;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px;
+        width: 40%;
+        font-size: 20px;
+        font-weight: 600;
+        color: white;
+    }
+    
+    .card-fooditemcard .card-body{
+        padding-top: 10px;
+        font-size: 15px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .card-fooditemcard .card-footer{
+        font-size: 20px;
+        height: 2em;
+        padding-top: 3px;
+        padding-left: 10px;
+    }
 
-        .card-cont h3 {
-            color: #3C3C3C;
-            font-size: 130%
-        }
+    .quantity {
+        width: 70px;
+        height: 10px;
+        
+    }
+</style>
 
+<section class="row">
+    <section class="ticketCard col-6 my-5 mx-5">
+        <h1>Tickets</h1>
 
-        .card-cont > div {
-            display: table-row
-        }
+    </section>
 
-        .card-cont .even-date i,
-        .card-cont .even-info i,
-        .card-cont .even-date time,
-        .card-cont .even-info p {
-            display: table-cell
-        }
-
-        .card-cont .even-date i,
-        .card-cont .even-info i {
-            padding: 5% 5% 0 0
-        }
-
-        .card-cont .even-info p {
-            padding: 30px 50px 0 0
-        }
-
-        .card-cont .even-date time span {
-            display: block
-        }
-
-        .card-cont .cancelBtn {
-            display: block;
-            text-decoration: none;
-            width: 100;
-            background-color: red;
-            text-align: center;
-            color: white;
-            border-radius: 2px;
-            position: absolute;
-            right: 10px;
-            bottom: 10px
-        }
-
-
-        @media screen and(max-width: 860px) {
-            .card {
-                display: block;
-                float: none;
-                width: 100%;
-                margin-bottom: 10px
-            }
-            .card+.card {
-                margin-left: 0
-            }
-            .card-cont .even-date,
-            .card-cont .even-info {
-                font-size: 75%
-            }
-        }
-
-        .classCheckoutlist {
-            font-size: 2em;
-
-        }
-
-        .classCheckoutlist .row {
-            font-family: 'Oswald', sans-serif;
-            text-align: right;
-            font-size: 1em;
-            font-weight: 600;
-        }
-
-        .classCheckoutlist .row .price {
-            text-align: left;
-        }
-
-        #checkoutBtn {
-            position: relative;
-            background: #c41f26;
-            width: 300px;
-            height: 34px;
-            color: white;
-            right: 4%;
-
-        }
-    </style>
-
-    <section class="row">
-        <section class="ticketCard col-6 my-5 mx-5">
-            <h1>Tickets</h1>
-
-        </section>
-
-        <section class="classCheckoutlist my-5 col-5">
+    <section class="classCheckoutlist my-5 col-5">
             <h1 class="" style="text-align: center; background: greenyellow;">checkout</h1>
             <hr>
                 <div class="row">
@@ -235,209 +271,313 @@
                         <button id="checkoutBtn" class="btn">CHECKOUT</button>
                     </div>
 
-                </section>
             </section>
+        </section>
 
 
-            <button class="addTicket">Add Card</button>
+        <button class="addTicket">Add Card</button>
 
-            <script>
-                // Add the shadow on cards when u hover over them
-                $(document).ready(function () {
-                    $('.card').hover(function () {
-                        $(this).addClass('shadow-lg').css('cursor', 'pointer');
-                    }, function () {
-                        $(this).removeClass('shadow-lg');
-                    });
-                });
+        <script>
+            // Add the shadow on cards when u hover over them
+                            $(document).ready(function () {
+                                $('.card').hover(function () {
+                                    $(this).addClass('shadow-lg').css('cursor', 'pointer');
+                                }, function () {
+                                    $(this).removeClass('shadow-lg');
+                                });
+                            });
+            
+                            // Add a new ticket card when u click on the button
+                            const ticketCart = document.querySelector(".ticketCard");
+            
+                            
+                            let tickets = {{ tickets | safe }};
+                            console.log(tickets);
 
-                // Add a new ticket card when u click on the button
-                const ticketCart = document.querySelector(".ticketCard");
+                            let foodcombo = {{foodcombo | safe}};
+                            console.log(foodcombo);
+            
+                            const movie = tickets.session.movie;
+                            const movieName = movie.movie_title;
+                            const movieGenre = movie.movie_genre;
+                            const movieDuration = movie.movie_duration;
+                            // const movieImg = movie.movie_img;
+                            const movieDescription = movie.movie_description;
 
+
+                            // this stores the checkOut list html contents
+                            const checkOutList = document.querySelector(".classCheckoutlist");
+                            const checkOutListHTML = checkOutList.innerHTML;
+
+                            // this store html contents of food items list
+
+                            const foodItemrow = document.createElement("div");
+                            foodItemrow.classList.add("row","foodItemrow","row-cols-1","row-cols-md-2");
+                            foodItemrow.style.marginTop = "70px";
+
+                            const comboesHeader = document.createElement("h1");
+                            comboesHeader.innerHTML = "Food Combos";
+
+                            tickets.seats.forEach((seat) => {
+                                createNewTicket(seat);
+                            });
+            
+                            const cards = document.querySelectorAll(".card");
+                            const cardIndexes = [];
+                            
+                            cards.forEach((card, index) => {
+                                cardIndexes.push(index);
+                                card.dataset.index = index;
+            
+                                card.addEventListener ("click", () => {
+                                    highlightCard(card);
+                                });
+            
+                                card.querySelector(".cancelBtn").addEventListener("click", cancelTicket);
+                            });
+            
+                            // function to create a new ticket card
+                            function createNewTicket(seat) { // create a new article element with the class "card"
+                                const card = document.createElement("article");
+                                card.classList.add("card");
+            
+                                // create a new section element with the class "date"
+                                const date = document.createElement("section");
+                                date.classList.add("date");
+            
+                                // create a new time element with the datetime attribute set to "23th feb"
+                                const time = document.createElement("time");
+                                time.setAttribute("datetime", "23th feb");
+            
+                                // create two new span elements with the text "23" and "feb"
+                                const span1 = document.createElement("span");
+                                span1.textContent = "16";
+                                const span2 = document.createElement("span");
+                                span2.textContent = "feb";
+            
+                                // append the span elements to the time element
+                                time.appendChild(span1);
+                                time.appendChild(span2);
+            
+                                // append the time element to the date section
+                                date.appendChild(time);
+            
+                                // create a new section element with the class "card-cont"
+                                const cardCont = document.createElement("section");
+                                cardCont.classList.add("card-cont");
+            
+            
+                                const h3 = document.createElement("h3");
+                                h3.textContent = movieName;
+            
+                                // create a new div element with the class "even-date"
+                                const evenDate = document.createElement("div");
+                                evenDate.classList.add("even-date");
+            
+                                // create a new i element with the class "fa fa-calendar"
+                                const i = document.createElement("i");
+                                i.classList.add("fa", "fa-calendar");
+            
+                                // create a new time element with the text "wednesday 28 december 2014" and "08:55pm to 12:00 am"
+                                const time2 = document.createElement("time");
+                                time2.innerHTML = "<span> Duration : " + movieDuration + " hours </span>";
+            
+                                // append the i and time elements to the even-date div
+                                evenDate.appendChild(i);
+                                evenDate.appendChild(time2);
+            
+                                // create a new div element with the class "even-info"
+                                const evenInfo = document.createElement("div");
+                                evenInfo.classList.add("even-info");
+            
+                                // create a new i element with the class "fa fa-map-marker"
+                                const i2 = document.createElement("i");
+                                i2.classList.add("fa", "fa-map-marker");
+            
+                                // create a new p element with the text "nexen square for people australia, sydney"
+                                const p = document.createElement("p");
+                                p.textContent = movieDescription;
+            
+                                // append the i and p elements to the even-info div
+                                evenInfo.appendChild(i2);
+                                evenInfo.appendChild(p);
+            
+                                // create a new a element with the text "tickets"
+                                const btn = document.createElement("button");
+                                btn.classList.add("cancelBtn", "btn");
+                                btn.textContent = "Cancel Ticket";
+            
+            
+                                // append the small, h3, even-date, even-info, and a elements to the card-cont section
+                                cardCont.appendChild(h3);
+                                cardCont.appendChild(evenDate);
+                                cardCont.appendChild(evenInfo);
+                                cardCont.appendChild(btn);
+            
+                                // append the date and card-cont sections to the card article
+                                card.appendChild(date);
+                                card.appendChild(cardCont);
+            
+                                // create a new row element with the class "row"
+                                const row = document.createElement("div");
+                                row.classList.add("row");
+            
+                                // append the card article to the row element
+                                row.appendChild(card);
+            
+                                // append the row element to the document body
+                                ticketCart.appendChild(row);
+                            }
+            
+                            // function to create food items card
+            
+                            function listAvailableComboes() {
+                                
+                                foodcombo.forEach((combo) => {
+                                    createNewFoodItem(combo);
+                                });
                 
-                let tickets = {{ tickets | safe }};
-                console.log(tickets);
+                            }
 
-                const movie = tickets.session.movie;
-                const movieName = movie.movie_title;
-                const movieGenre = movie.movie_genre;
-                const movieDuration = movie.movie_duration;
-                // const movieImg = movie.movie_img;
-                const movieDescription = movie.movie_description;
+                            function createNewFoodItem(combo) {
+                                const fooditemcard1 = document.createElement("div")
+                                fooditemcard1.classList.add("card-fooditemcard", "col");
+                                
+                                const img1 = document.createElement("img");
+                                img1.classList.add("card-img-top");
+                                img1.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdGMa2NpQ6nvK52J3fmFh_Y_C0I7HkLu22yg&usqp=CAU";
+                                img1.alt = "Combo 1";
 
+                                const cardBody1 = document.createElement("div");
+                                cardBody1.classList.add("card-body");
 
-                tickets.seats.forEach((seat) => {
-                    createNewTicket(seat);
-                });
+                                const foodName = document.createElement("h5");
+                                foodName.textContent = combo.combo_name;
 
-                const cards = document.querySelectorAll(".card");
-                const cardIndexes = [];
-                cards.forEach((card, index) => {
-                    cardIndexes.push(index);
-                    card.dataset.index = index;
-                    card.querySelector(".cancelBtn").addEventListener("click", cancelTicket);
-                });
+                                const foodPrice = document.createElement("p");
+                                foodPrice.textContent = "Price: $" + combo.combo_price;
 
+                                const addAmmountBody = document.createElement("div");
+                                addAmmountBody.classList.add("card-footer");
 
-                // function to create a new ticket card
-                function createNewTicket(seat) { // create a new article element with the class "card"
-                    const card = document.createElement("article");
-                    card.classList.add("card");
+                                const ammountContent = document.createElement("div");
+                                ammountContent.setAttribute("class", "d-flex justify-content-between align-items-center");
 
-                    // create a new section element with the class "date"
-                    const date = document.createElement("section");
-                    date.classList.add("date");
+                                const amountLabel = document.createElement("label");
+                                amountLabel.textContent = "Amount: ";
 
-                    // create a new time element with the datetime attribute set to "23th feb"
-                    const time = document.createElement("time");
-                    time.setAttribute("datetime", "23th feb");
+                                const amountField = document.createElement("input");
+                                
+                                amountField.type = "number";
+                                amountField.min = "0";
+                                amountField.setAttribute("value", "0");
+                                amountField.classList.add("form-control", "form-control-sm", "quantity");
 
-                    // create two new span elements with the text "23" and "feb"
-                    const span1 = document.createElement("span");
-                    span1.textContent = "16";
-                    const span2 = document.createElement("span");
-                    span2.textContent = "feb";
+        
+                                ammountContent.appendChild(amountLabel);
+                                ammountContent.appendChild(amountField);
+                            
+                                addAmmountBody.appendChild(ammountContent);
 
-                    // append the span elements to the time element
-                    time.appendChild(span1);
-                    time.appendChild(span2);
+                                cardBody1.appendChild(foodName);
+                                cardBody1.appendChild(foodPrice);
+                                cardBody1.appendChild(addAmmountBody);
 
-                    // append the time element to the date section
-                    date.appendChild(time);
+                                fooditemcard1.appendChild(img1);
+                                fooditemcard1.appendChild(cardBody1);
 
-                    // create a new section element with the class "card-cont"
-                    const cardCont = document.createElement("section");
-                    cardCont.classList.add("card-cont");
+                                foodItemrow.appendChild(fooditemcard1);
+                            }
+             
+                            function calculateTotalPrice() {
+                                let total = 0;
+                                let foodTotal = 0;
+                                let subtotal = 0;
+                                let tax = 0;
+                                let finalPrice = 0;
+                                tickets.seats.forEach((seat) => {
+                                    total += 5;
+                                    foodTotal += 1;
+                                    subtotal = total + foodTotal;
+                                    tax = subtotal * 0.13;
+                                    finalPrice = subtotal + tax;
+                                });
+                                document.getElementById("total").innerHTML = "$" + total;
+                                document.getElementById("foodTotal").innerHTML = "$" + foodTotal;
+                                document.getElementById("subtotal").innerHTML = "$" + subtotal;
+                                document.getElementById("tax").innerHTML = "$" + tax;
+                                document.getElementById("finalPrice").innerHTML = "$" + finalPrice;
+                            }
+            
+                            // function to highlight the selected ticket
+                            function highlightCard(card) {
+                                
+                                cards.forEach((ticketcard) => {
+                                    if (ticketcard === card) {
+                                        ticketcard.classList.toggle("card-selected");
+                                    } else {
+                                        ticketcard.classList.remove("card-selected");
+                                    }
+                                });
 
+                                // Check if any ticket is selected
+                                const selectedTicket = document.querySelector(".card-selected");
+                                const rightsection = document.querySelector(".classCheckoutlist");
 
-                    const h3 = document.createElement("h3");
-                    h3.textContent = movieName;
-
-                    // create a new div element with the class "even-date"
-                    const evenDate = document.createElement("div");
-                    evenDate.classList.add("even-date");
-
-                    // create a new i element with the class "fa fa-calendar"
-                    const i = document.createElement("i");
-                    i.classList.add("fa", "fa-calendar");
-
-                    // create a new time element with the text "wednesday 28 december 2014" and "08:55pm to 12:00 am"
-                    const time2 = document.createElement("time");
-                    time2.innerHTML = "<span> Duration : " + movieDuration + " hours </span>";
-
-                    // append the i and time elements to the even-date div
-                    evenDate.appendChild(i);
-                    evenDate.appendChild(time2);
-
-                    // create a new div element with the class "even-info"
-                    const evenInfo = document.createElement("div");
-                    evenInfo.classList.add("even-info");
-
-                    // create a new i element with the class "fa fa-map-marker"
-                    const i2 = document.createElement("i");
-                    i2.classList.add("fa", "fa-map-marker");
-
-                    // create a new p element with the text "nexen square for people australia, sydney"
-                    const p = document.createElement("p");
-                    p.textContent = movieDescription;
-
-                    // append the i and p elements to the even-info div
-                    evenInfo.appendChild(i2);
-                    evenInfo.appendChild(p);
-
-                    // create a new a element with the text "tickets"
-                    const btn = document.createElement("button");
-                    btn.classList.add("cancelBtn", "btn");
-                    btn.textContent = "Cancel Ticket";
-
-
-                    // append the small, h3, even-date, even-info, and a elements to the card-cont section
-                    cardCont.appendChild(h3);
-                    cardCont.appendChild(evenDate);
-                    cardCont.appendChild(evenInfo);
-                    cardCont.appendChild(btn);
-
-                    // append the date and card-cont sections to the card article
-                    card.appendChild(date);
-                    card.appendChild(cardCont);
-
-                    // create a new row element with the class "row"
-                    const row = document.createElement("div");
-                    row.classList.add("row");
-
-                    // append the card article to the row element
-                    row.appendChild(card);
-
-                    // append the row element to the document body
-                    ticketCart.appendChild(row);
-                }
-
-                function calculateTotalPrice() {
-                    let total = 0;
-                    let foodTotal = 0;
-                    let subtotal = 0;
-                    let tax = 0;
-                    let finalPrice = 0;
-                    tickets.seats.forEach((seat) => {
-                        total += 5;
-                        foodTotal += 1;
-                        subtotal = total + foodTotal;
-                        tax = subtotal * 0.13;
-                        finalPrice = subtotal + tax;
-                    });
-                    document.getElementById("total").innerHTML = "$" + total;
-                    document.getElementById("foodTotal").innerHTML = "$" + foodTotal;
-                    document.getElementById("subtotal").innerHTML = "$" + subtotal;
-                    document.getElementById("tax").innerHTML = "$" + tax;
-                    document.getElementById("finalPrice").innerHTML = "$" + finalPrice;
-                }
-
-
-                function cancelTicket(event) {
-                    const card = event.target.closest(".card");
-                    const seatIndex = card.dataset.index;
-                    card.remove();
-                    tickets.seats.splice(seatIndex, 1);
-
-                    calculateTotalPrice();
-                    saveTickets(tickets);
-
-                    if (tickets.seats.length === 0) {
-                        document.querySelector(".ticketCart").innerHTML = "<h1>Cart is empty</h1>";
-                    }
-                }
-                
-                function saveTickets(tickets) {
-                    localStorage.setItem("tickets", JSON.stringify(tickets));
-                }
-
-                calculateTotalPrice();
-                // add a click event listener to the "Add Card" button
-                document.querySelector(".addTicket").addEventListener("click", createNewTicket);
-                document.getElementById("checkoutBtn").addEventListener("click", function () {
-
-                    const data = {
-                        "tickets": tickets
-                    };
-
-                    fetch("{% url 'checkout' %}", {
-                        method: 'POST',
-                        credentials: 'same-origin',
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
-                            'X-CSRFToken': "{{ csrf_token }}"
-                        },
-                        body: JSON.stringify(
-                            {"data": data}
-                        )
-                    }).then(response => {
-                        if (response.ok) {
-                            window.location.href = '{% url "checkOutCart" %}';
-                        } else {
-                            throw new Error('Something went wrong');
-                        }
-                    })
-                });
-            </script>
-        {% endblock %}
+                                if (selectedTicket) {
+                                    checkOutList.innerHTML = foodItemrow.outerHTML;
+                                } else {
+                                    checkOutList.innerHTML = checkOutListHTML;
+                                    calculateTotalPrice();
+                                }
+                            }
+            
+                            function cancelTicket(event) {
+                                const card = event.target.closest(".card");
+                                const seatIndex = card.dataset.index;
+                                card.remove();
+                                tickets.seats.splice(seatIndex, 1);
+            
+                                calculateTotalPrice();
+                                saveTickets(tickets);
+            
+                                if (tickets.seats.length === 0) {
+                                    document.querySelector(".ticketCart").innerHTML = "<h1>Cart is empty</h1>";
+                                }
+                            }
+                            
+                            function saveTickets(tickets) {
+                                localStorage.setItem("tickets", JSON.stringify(tickets));
+                            }
+            
+                            calculateTotalPrice();
+                            listAvailableComboes();
+                            // add a click event listener to the "Add Card" button
+                            document.querySelector(".addTicket").addEventListener("click", createNewTicket);
+                            document.getElementById("checkoutBtn").addEventListener("click", function () {
+            
+                                const data = {
+                                    "tickets": tickets
+                                };
+            
+                                fetch("{% url 'checkout' %}", {
+                                    method: 'POST',
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
+                                        'X-CSRFToken': "{{ csrf_token }}"
+                                    },
+                                    body: JSON.stringify(
+                                        {"data": data}
+                                    )
+                                }).then(response => {
+                                    if (response.ok) {
+                                        window.location.href = '{% url "checkOutCart" %}';
+                                    } else {
+                                        throw new Error('Something went wrong');
+                                    }
+                                })
+                            });
+                        </script>
+                    {% endblock %}
