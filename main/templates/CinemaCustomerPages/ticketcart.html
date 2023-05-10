@@ -464,7 +464,12 @@
                                 foodName.textContent = combo.combo_name;
 
                                 const foodPrice = document.createElement("p");
-                                foodPrice.textContent = "Price: $" + combo.combo_price;
+
+                                const Pricespan = document.createElement("span");
+                                Pricespan.classList.add("combo-price");
+                                Pricespan.textContent = combo.combo_price;
+                                foodPrice.textContent = "Price: $";
+                                foodPrice.appendChild(Pricespan);
 
                                 const addAmmountBody = document.createElement("div");
                                 addAmmountBody.classList.add("card-footer");
@@ -539,6 +544,8 @@
                                 doneBtn.textContent = "Done";
                                 doneBtn.classList.add("btn", "ConfirmBtn");
 
+                                doneBtn.addEventListener("click", confirmOrder);
+
                                 if (selectedTicket) {
                                     checkOutList.innerHTML = foodItemrow.outerHTML;
                                     rightsection.appendChild(line);
@@ -565,6 +572,36 @@
                             
                             function saveTickets(tickets) {
                                 localStorage.setItem("tickets", JSON.stringify(tickets));
+                            }
+
+                            function confirmOrder() {
+
+                                const foodcards = document.querySelectorAll(".card-fooditemcard");
+                                const comboList = document.querySelector(".card-selected .card-cont .foodItems .comboesList");
+                                comboList.innerHTML = "";
+
+                                foodcards.forEach((foodcard) => {
+                                    const comboQuantity = foodcard.querySelector(".card-footer .d-flex .quantity").value;
+
+                                    
+                                    if (comboQuantity > 0) {
+                                        const comboname = foodcard.querySelector(".card-body h5").textContent;
+                                        const comboPrice = foodcard.querySelector(".card-body p .combo-price").textContent;
+
+                                        const combo_li = document.createElement("li");
+                                        combo_li.classList.add("list-group-item", "d-flex", "justify-content-between", "lh-condensed");
+                                        combo_li.innerHTML = comboname + " x " + comboQuantity;
+                                        comboList.appendChild(combo_li);
+                                    }
+                                    
+                                });
+
+                                // const comboname = document.querySelector(".card-fooditemcard .card-body h5").textContent;
+                                // const comboPrice = document.querySelector(".card-fooditemcard .card-body p").textContent;
+
+                                // const comboQuantity = document.querySelector(".card-fooditemcard .card-footer .d-flex .quantity").value;
+
+                                // console.log(comboname, comboPrice, comboQuantity);
                             }
             
                             calculateTotalPrice();
