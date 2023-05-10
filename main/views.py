@@ -140,9 +140,5 @@ def TicketsPurse(request):
 def test(request):
     return render(request, 'CinemaCustomerPages/test.html')
 
-def add(x, y):
-    return x+y
-
-
 def mainPageAlter(request):
     return render (request, 'CinemaCustomerPages/homealternative.html')
