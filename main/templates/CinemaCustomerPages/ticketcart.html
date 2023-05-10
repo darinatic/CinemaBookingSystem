@@ -197,7 +197,7 @@
         text-align: left;
     }
 
-    #checkoutBtn {
+    .ConfirmBtn {
         position: relative;
         background: #c41f26;
         width: 300px;
@@ -268,14 +268,14 @@
                     </div>
 
                     <div class="d-flex justify-content-center pt-4">
-                        <button id="checkoutBtn" class="btn">CHECKOUT</button>
+                        <button id="checkoutBtn" class="btn ConfirmBtn">CHECKOUT</button>
                     </div>
 
             </section>
         </section>
 
 
-        <button class="addTicket">Add Card</button>
+        
 
         <script>
             // Add the shadow on cards when u hover over them
@@ -310,7 +310,6 @@
                             const checkOutListHTML = checkOutList.innerHTML;
 
                             // this store html contents of food items list
-
                             const foodItemrow = document.createElement("div");
                             foodItemrow.classList.add("row","foodItemrow","row-cols-1","row-cols-md-2");
                             foodItemrow.style.marginTop = "70px";
@@ -318,6 +317,7 @@
                             const comboesHeader = document.createElement("h1");
                             comboesHeader.innerHTML = "Food Combos";
 
+                            // Generate a new ticket cards for each seat selected
                             tickets.seats.forEach((seat) => {
                                 createNewTicket(seat);
                             });
@@ -374,33 +374,38 @@
                                 const evenDate = document.createElement("div");
                                 evenDate.classList.add("even-date");
             
-                                // create a new i element with the class "fa fa-calendar"
-                                const i = document.createElement("i");
-                                i.classList.add("fa", "fa-calendar");
-            
                                 // create a new time element with the text "wednesday 28 december 2014" and "08:55pm to 12:00 am"
                                 const time2 = document.createElement("time");
                                 time2.innerHTML = "<span> Duration : " + movieDuration + " hours </span>";
             
                                 // append the i and time elements to the even-date div
-                                evenDate.appendChild(i);
+                                
                                 evenDate.appendChild(time2);
             
                                 // create a new div element with the class "even-info"
                                 const evenInfo = document.createElement("div");
                                 evenInfo.classList.add("even-info");
             
-                                // create a new i element with the class "fa fa-map-marker"
-                                const i2 = document.createElement("i");
-                                i2.classList.add("fa", "fa-map-marker");
-            
                                 // create a new p element with the text "nexen square for people australia, sydney"
                                 const p = document.createElement("p");
                                 p.textContent = movieDescription;
-            
+
+                                // create a list of food items when the user add the food items
+                                const comboes = document.createElement("div");
+                                comboes.classList.add("foodItems");
+
+                                const comboesLabel = document.createElement("h6");
+                                comboesLabel.innerHTML = "Food Combos :";
+                                comboes.appendChild(comboesLabel);
+
+                                const comboesList = document.createElement("ul");
+                                comboesList.classList.add("comboesList");
+                                comboes.appendChild(comboesList);
+
                                 // append the i and p elements to the even-info div
-                                evenInfo.appendChild(i2);
+                                
                                 evenInfo.appendChild(p);
+                               
             
                                 // create a new a element with the text "tickets"
                                 const btn = document.createElement("button");
@@ -412,6 +417,7 @@
                                 cardCont.appendChild(h3);
                                 cardCont.appendChild(evenDate);
                                 cardCont.appendChild(evenInfo);
+                                cardCont.appendChild(comboes);
                                 cardCont.appendChild(btn);
             
                                 // append the date and card-cont sections to the card article
@@ -436,6 +442,9 @@
                                 foodcombo.forEach((combo) => {
                                     createNewFoodItem(combo);
                                 });
+
+                                const line = document.createElement("hr");
+
                 
                             }
 
@@ -524,8 +533,16 @@
                                 const selectedTicket = document.querySelector(".card-selected");
                                 const rightsection = document.querySelector(".classCheckoutlist");
 
+                                const line = document.createElement("hr");
+
+                                const doneBtn = document.createElement("button");
+                                doneBtn.textContent = "Done";
+                                doneBtn.classList.add("btn", "ConfirmBtn");
+
                                 if (selectedTicket) {
                                     checkOutList.innerHTML = foodItemrow.outerHTML;
+                                    rightsection.appendChild(line);
+                                    rightsection.appendChild(doneBtn);
                                 } else {
                                     checkOutList.innerHTML = checkOutListHTML;
                                     calculateTotalPrice();
@@ -553,7 +570,7 @@
                             calculateTotalPrice();
                             listAvailableComboes();
                             // add a click event listener to the "Add Card" button
-                            document.querySelector(".addTicket").addEventListener("click", createNewTicket);
+                            
                             document.getElementById("checkoutBtn").addEventListener("click", function () {
             
                                 const data = {
@@ -579,5 +596,16 @@
                                     }
                                 })
                             });
+                            
+                            // The first ticket will always be highlighted, so that customer
+                            // can see the food comboes by default
+                            
+                            // Add an event listener for the load event of the window object
+                            window.addEventListener("load", () => {
+                            // Select the first ticket card element and highlight it
+                                const firstTicket = document.querySelector(".card");
+                            highlightCard(firstTicket);
+                            });
+                            
                         </script>
                     {% endblock %}

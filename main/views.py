@@ -95,6 +95,7 @@ def checkout(request):
         return HttpResponse("OK")
         
 def checkOutCart(request):
+    print ("HELLO")
     data = request.session.get("checkout")
     data_json = json.loads(json.dumps(data)) if data else []
       
