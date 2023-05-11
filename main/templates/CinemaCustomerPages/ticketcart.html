@@ -143,6 +143,12 @@
         display: block
     }
 
+    .card-cont .notice {
+        color: red;
+    }
+
+
+
     .card-cont .cancelBtn {
         display: block;
         text-decoration: none;
@@ -178,6 +184,10 @@
         color: white;
     }
 
+    .card-selected .notice {
+        color: aqua;
+    }
+
     .card-selected .card-cont h3 {
         color: white;
     }
@@ -197,10 +207,12 @@
         text-align: left;
     }
 
-    .ConfirmBtn {
+    .PayBtn {
         position: relative;
+        margin-left: 10px;
+        margin-right: 10px;
         background: #c41f26;
-        width: 300px;
+        width: 200px;
         height: 34px;
         color: white;
         right: 4%;
@@ -228,7 +240,7 @@
         padding-top: 3px;
         padding-left: 10px;
     }
-
+ 
     .quantity {
         width: 70px;
         height: 10px;
@@ -268,7 +280,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center pt-4">
-                        <button id="checkoutBtn" class="btn ConfirmBtn">CHECKOUT</button>
+                        <button id="PayBtnId" class="btn PayBtn">Pay</button>
                     </div>
 
             </section>
@@ -402,6 +414,12 @@
                                 comboesList.classList.add("comboesList");
                                 comboes.appendChild(comboesList);
 
+                                const notice = document.createElement("li")
+                                notice.innerHTML = "Click on ticket to add food items";
+                                notice.classList.add("notice");
+
+                                comboesList.appendChild(notice);
+
                                 // append the i and p elements to the even-info div
                                 
                                 evenInfo.appendChild(p);
@@ -504,6 +522,7 @@
                             }
              
                             function calculateTotalPrice() {
+                                console.log(localStorage.getItem("comboes"));
                                 let total = 0;
                                 let foodTotal = 0;
                                 let subtotal = 0;
@@ -528,7 +547,7 @@
                                 
                                 cards.forEach((ticketcard) => {
                                     if (ticketcard === card) {
-                                        ticketcard.classList.toggle("card-selected");
+                                        ticketcard.classList.add("card-selected");
                                     } else {
                                         ticketcard.classList.remove("card-selected");
                                     }
@@ -540,20 +559,28 @@
 
                                 const line = document.createElement("hr");
 
+                                const foodbuttoncontainer = document.createElement("div");
+                                foodbuttoncontainer.classList.add("foodbuttoncontainer" , "text-center");
+
                                 const doneBtn = document.createElement("button");
                                 doneBtn.textContent = "Done";
-                                doneBtn.classList.add("btn", "ConfirmBtn");
+                                doneBtn.classList.add("btn", "PayBtn");
+
+                                const checkOutBtn = document.createElement("button");
+                                checkOutBtn.textContent = "Check Out";
+                                checkOutBtn.classList.add("btn", "PayBtn");
+
+                                foodbuttoncontainer.appendChild(doneBtn);
+                                foodbuttoncontainer.appendChild(checkOutBtn);
 
                                 doneBtn.addEventListener("click", confirmOrder);
+                                checkOutBtn.addEventListener("click", checkOut);
 
                                 if (selectedTicket) {
                                     checkOutList.innerHTML = foodItemrow.outerHTML;
                                     rightsection.appendChild(line);
-                                    rightsection.appendChild(doneBtn);
-                                } else {
-                                    checkOutList.innerHTML = checkOutListHTML;
-                                    calculateTotalPrice();
-                                }
+                                    rightsection.appendChild(foodbuttoncontainer);
+                                } 
                             }
             
                             function cancelTicket(event) {
@@ -580,6 +607,8 @@
                                 const comboList = document.querySelector(".card-selected .card-cont .foodItems .comboesList");
                                 comboList.innerHTML = "";
 
+                                let comboes = JSON.parse(localStorage.getItem("comboes")) || [];
+
                                 foodcards.forEach((foodcard) => {
                                     const comboQuantity = foodcard.querySelector(".card-footer .d-flex .quantity").value;
 
@@ -592,23 +621,34 @@
                                         combo_li.classList.add("list-group-item", "d-flex", "justify-content-between", "lh-condensed");
                                         combo_li.innerHTML = comboname + " x " + comboQuantity;
                                         comboList.appendChild(combo_li);
+
+                                        comboes.push({
+                                            "combo_name": comboname,
+                                            "combo_price": comboPrice,
+                                            "combo_quantity": comboQuantity
+                                        });
                                     }
                                     
                                 });
 
-                                // const comboname = document.querySelector(".card-fooditemcard .card-body h5").textContent;
-                                // const comboPrice = document.querySelector(".card-fooditemcard .card-body p").textContent;
-
-                                // const comboQuantity = document.querySelector(".card-fooditemcard .card-footer .d-flex .quantity").value;
-
-                                // console.log(comboname, comboPrice, comboQuantity);
+                                localStorage.setItem("comboes", JSON.stringify(comboes));
                             }
-            
-                            calculateTotalPrice();
+
+                            function checkOut () {
+                                cards.forEach((card) => {
+                                    card.classList.remove("card-selected");
+                                })
+
+                                const rightsection = document.querySelector(".classCheckoutlist");
+
+                                rightsection.innerHTML = checkOutListHTML;
+                                calculateTotalPrice();
+
+                            }
+        
                             listAvailableComboes();
                             // add a click event listener to the "Add Card" button
-                            
-                            document.getElementById("checkoutBtn").addEventListener("click", function () {
+                            document.getElementById("PayBtnId").addEventListener("click", function () {
             
                                 const data = {
                                     "tickets": tickets
