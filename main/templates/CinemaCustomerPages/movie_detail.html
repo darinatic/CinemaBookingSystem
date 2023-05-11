@@ -1,512 +1,446 @@
 {% extends "CinemaCustomerPages/CustomerView.html" %}
 
+{% load static %}
+
 {% block title %}
-    {{ movie.movie_title }}
+{{ movie.movie_title }}
 {% endblock %}
 
 {% block content %}
-    <style>
-        body {
-            background-color: #2D2727;
-            color: white;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-        }
-        h2,
-        h3,
-        h4,
-        hr {
-            font-family: Arial, Helvetica, sans-serif;
-            color: gold;
-        }
-        p {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            font-size: large;
-        }
-        @import url("https://fonts.googleapis.com/css?family=Lato &display=swap");
 
-        * {
-            box-sizing: border-box;
-        }
+<div class="container my-5 mx-7 ">
+    <div class="row ">
+        <div class=" col-4 p-3 m-1 ">
+            <img class="" src={{ movie.movie_img }} alt="">
+        </div>
+        <div class=" col-7  py-3 px-3">
+            <h2 class="mt-5">{{ movie.movie_title }}*</h2>
+            <hr>
+            <h4 class="my-4">Details</h4>
+            <p class="mt-5">Genre:
+                {{ movie.movie_genre }}
+            </p>
+            <p class="py-2">
+                Duration:{{ movie.movie_duration }}hrs
+            </p>
 
-        .ticketCartcontainer {
-            display: flex;
-        }
+            <h4 class="mt-5">Synosis</h4>
+            <br>
+            <p>{{ movie.movie_description }}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="seatSelectorCon">
+        <section class="seat-section ">
 
-        .seat-section {
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 80vh;
-            font-family: "Lato", sans-serif;
-            margin: 0;
-        }
+            <h3>Select the seat u want to purchase</h3>
+            <br>
 
-        .movie-container {
-            margin: 20px 0;
-        }
+            <ul class="showcase">
+                <li>
+                    <div class="seat"></div>
+                    <small>Available</small>
+                </li>
+                <li>
+                    <div class="seat selected"></div>
+                    <small>Selected</small>
+                </li>
+                <li>
+                    <div class="seat sold"></div>
+                    <small>Sold</small>
+                </li>
+            </ul>
 
-        .movie-container select {
-            background-color: #fff;
-            border: 0;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-left: 10px;
-            padding: 5px 15px;
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .seatSelectorCon {
-            margin-top: 10em;
-            margin-bottom: 7em;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .seat-container {
-            perspective: 1000px;
-            margin-bottom: 30px;
-        }
-
-        .seat {
-            background-color: #444451;
-            height: 26px;
-            width: 32px;
-            margin: 3px;
-            font-size: 50px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-
-        .seat.selected {
-            background-color: green;
-        }
-
-        .seat.sold {
-            background-color: #fff;
-        }
-
-        .seat:nth-of-type(2) {
-            margin-right: 18px;
-        }
-
-        .seat:nth-last-of-type(2) {
-            margin-left: 18px;
-        }
-
-        .seat:not(.sold):hover {
-            cursor: pointer;
-            transform: scale(1.2);
-        }
-
-        .showcase .seat:not(.sold):hover {
-            cursor: default;
-            transform: scale(1);
-        }
-
-        .showcase {
-            background: rgba(0, 0, 0, 0.1);
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #777;
-            list-style-type: none;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .showcase li {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
-        }
-        .showcase li small {
-            margin-left: 2px;
-        }
-
-        .row {
-            display: flex;
-        }
-
-        .screen {
-            background-color: #fff;
-            height: 120px;
-            width: 100%;
-            margin: 15px 0;
-            transform: rotateX(-48deg);
-            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
-        }
-
-        p.text {
-            margin: 5px 0;
-        }
-
-        p.text span {
-            color: rgb(158, 248, 158);
-        }
-
-        .sc-container {
-            display: block;
-            justify-content: center;
-            margin-left: 3em;
-        }
-
-        .sc-cart {
-            border: solid 2px black;
-            width: 350px;
-            min-height: 300px;
-            background-color: gray;
-            height: auto;
-            padding: 10px;
-            box-sizing: border-box;
-            border-radius: 10px;
-        }
-
-        .sc-cart table td {
-            padding: 2px;
-            vertical-align: middle;
-            text-align: center;
-            font-size: 20px;
-            font-style: Arial, Helvetica, sans-serif;
-        }
-
-        .sc-totalPrice {
-            display: flex;
-            justify-content: center;
-        }
-        .sc-totalPrice p {
-            position: relative;
-            top: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .sc-ticket {
-            display: flex;
-            justify-content: center;
-            font-size: 14px;
-            height: 35px;
-            border: 2px solid black;
-            box-sizing: border-box;
-            border-radius: 4px;
-            width: 9em;
-            background-color: brown;
-        }
-    </style>
+            <div class="seat-container">
+                <div class="screen"></div>
 
 
-    <div class="container my-5 mx-7 ">
-        <div class="row ">
-            <div class=" col-4 p-3 m-1 ">
-                <img class="" src={{ movie.movie_img }} alt=""></div>
-            <div class=" col-7  py-3 px-3">
-                    <h2 class="mt-5">{{ movie.movie_title }}*</h2>
-                    <hr>
-                    <h4 class="my-4">Details</h4>
-                    <p class="mt-5">Genre:
-                        {{ movie.movie_genre }}
-                    </p>
-                    <p class="py-2">
-                        Duration:{{ movie.movie_duration }}hrs
-                    </p>
 
-                    <h4 class="mt-5">Synosis</h4>
-                    <br>
-                    <p>{{ movie.movie_description }}</p>
+            </div>
+
+            <p>Price per Seat :
+                <data id="movie" value="5">5</data>
+            </p>
+
+            <p class="text">
+                You have selected
+                <span id="count">0</span>
+                seat for a price of $SG.<span id="total">0</span>
+            </p>
+
+        </section>
+        <div>
+            <div class="sc-container">
+                <div class="sc-cart">
+                    <table class="table"></table>
+                </div>
+                <div style="display: inline-block">
+                    <div class="sc-totalPrice">
+                        <p>Total : $<span id="totalPrice">0</span>
+                        </p>
+                    </div>
+                    <div class="cart-buttons">
+                        <button class="sc-reset">Reset</button>
+                        <button class="sc-addToCart">Add to Cart</button>
+                    </div>
+                </div>
+
             </div>
         </div>
-        <hr>
-        <div class="seatSelectorCon">
-                            <section class="seat-section ">
 
-                                <h3>Select the seat u want to purchase</h3>
-                                <br>
-
-                                    <ul class="showcase">
-                                        <li>
-                                            <div class="seat"></div>
-                                            <small>Available</small>
-                                        </li>
-                                        <li>
-                                            <div class="seat selected"></div>
-                                            <small>Selected</small>
-                                        </li>
-                                        <li>
-                                            <div class="seat sold"></div>
-                                            <small>Sold</small>
-                                        </li>
-                                    </ul>
-
-                                    <div class="seat-container">
-                                        <div class="screen"></div>
-
-                                        
-
-                                    </div>
-
-                                    <p>Price per Seat :
-                                        <data id="movie" value="5">5</data>
-                                    </p>
-
-                                    <p class="text">
-                                        You have selected
-                                        <span id="count">0</span>
-                                        seat for a price of $SG.<span id="total">0</span>
-                                    </p>
-
-                                </section>
-                                <div>
-                                    <div class="sc-container">
-                                        <div class="sc-cart">
-                                            <table class="table"></table>
-                                        </div>
-                                        <div style="display: inline-block">
-                                            <div class="sc-totalPrice">
-                                                <p>Total : $<span id="totalPrice">0</span>
-                                                </p>
-                                            </div>
-                                            <div class="cart-buttons">
-                                                <button class="sc-reset">Reset</button>
-                                                <button class="sc-addToCart">Add to Cart</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
+    </div>
+    <hr>
+    <div class="UserReviewContainer">
+        <h5 class="mb-1">All Ratings and Reviews</h5>
+        <div class="reviews-members pt-4 pb-4">
+            <div class="media">
+                <a href="#"><img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png"
+                        class="mr-3 rounded-pill"></a>
+                <div class="media-body">
+                    <div class="reviews-members-header">
+                        <span class="star-rating float-right">
+                            <a href="#"><i class="icofont-ui-rating active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating"></i></a>
+                        </span>
+                        <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
+                        <p class="text-gray">Tue, 20 Mar 2020</p>
+                    </div>
+                    <div class="reviews-members-body">
+                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
+                            classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a
+                            Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure
+                            Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the
+                            word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from
+                            sections </p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <hr>
+    </div>
+    <hr>
+    <div class="bg-secondary rounded shadow-sm p-4 mb-5 rating-review-select-page">
+        <h5 class="mb-4">Leave Comment</h5>
+        <p class="mb-2 ">Rate the Place</p>
+        <div class="mb-4">
+            <span class="star-rating">
+                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>Your Comment</label>
+            <textarea class="comment form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <button class="reviewSubmitBtn btn btn-primary btn-sm" type="button"> Submit Comment </button>
+        </div>
 
     </div>
 
+</div>
+<link rel="stylesheet" href="{% static 'css/movie_details.css' %}">
+<script>
+    console.log("movie_details.js loaded");
 
-                        <script>
-                            const container = document.querySelector(".seat-container");
-                            let seats = null;
-                            const count = document.getElementById("count");
-                            const total = document.getElementById("total");
-                            const totalPrice = document.getElementById("totalPrice")
-                            const movieSelect = document.getElementById("movie");
-                            const resetBtm = document.querySelector(".sc-reset");
-                            const addToCartBtn = document.querySelector(".sc-addToCart");
+    const container = document.querySelector(".seat-container");
+    let seats = null;
+    const count = document.getElementById("count");
+    const total = document.getElementById("total");
+    const totalPrice = document.getElementById("totalPrice")
+    const movieSelect = document.getElementById("movie");
+    const resetBtm = document.querySelector(".sc-reset");
+    const addToCartBtn = document.querySelector(".sc-addToCart");
 
-                            const table = document.querySelector(".table");
-                            const newRow = table.insertRow();
+    const table = document.querySelector(".table");
+    const newRow = table.insertRow();
 
-                            // const movieJson = "{{ movie_json|escapejs }}";
-                            // const movieObj = JSON.parse(movieJson);
+    // const movieJson = "{{ movie_json|escapejs }}";
+    // const movieObj = JSON.parse(movieJson);
 
-                            let addTicketsOnReload = true;
-
-
-                            let ticketPrice = + movieSelect.value;
-
-                            const sessionJSON = "{{ session_json|escapejs }}";
-                            const sessionObj = JSON.parse(sessionJSON);
-
-                            const movieObj = sessionObj.movie;
-                            console.log(sessionObj);
-
-                            populateUI();
-
-                            // Save selected movie index and price
-                            function setMovieData(movieIndex, moviePrice) {
-                                localStorage.setItem("selectedMovieIndex", movieIndex);
-                                localStorage.setItem("selectedMoviePrice", moviePrice);
-                            }
-
-                            // Update total and count
-                            function updateSelectedCount() {
-                                const selectedSeats = document.querySelectorAll(".row .seat.selected");
-
-                                const seatsIndex = [... selectedSeats].map((seat) => [... seats].indexOf(seat));
-
-                                localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
-
-                                if (addTicketsOnReload) {
-                                    seatsIndex.forEach((seat) => {
-                                        addSeatToCart(seat);
-                                    });
-                                    addTicketsOnReload = false;
-                                }
-
-                                const selectedSeatsCount = selectedSeats.length;
-
-                                count.innerText = selectedSeatsCount;
-                                total.innerText = selectedSeatsCount * ticketPrice;
-                                totalPrice.innerText = selectedSeatsCount * ticketPrice;
-
-                                setMovieData(movieSelect.selectedIndex, movieSelect.value);
-                            }
-
-                            // Get data from localstorage and populate UI
-                            function populateUI() {
-
-                                generateSeats();
-                                setSeatsArray();
-
-                                const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
-
-                                if (selectedSeats !== null && selectedSeats.length > 0) {
-                                    seats.forEach((seat, index) => {
-                                        if (selectedSeats.indexOf(index) > -1) {
-                                            seat.classList.add("selected");
-                                        }
-                                    });
-                                }
-
-                                const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
-
-                                if (selectedMovieIndex !== null) {
-                                    movieSelect.selectedIndex = selectedMovieIndex;
-                                }
-                            }
-
-                            function generateSeats() {
-                                const seatObjs = sessionObj.seats;
-                                let seatRowNo = 0;
-                                let seatRow = null;
-
-                                seatObjs.forEach((seat, index) => {
-                                    if (index % 8 === 0) {
-                                        seatRowNo++;
-                                        seatRow = document.createElement("div");
-                                        seatRow.classList.add("row", "justify-content-center");
-                                    }
-
-                                    const seatDiv = document.createElement("div");
-                                    seatDiv.classList.add("seat");
-
-                                    if (seat.is_available === false) {
-                                        seatDiv.classList.add("sold");
-                                    }
-
-                                    seatRow.appendChild(seatDiv);
-
-                                    if ((index + 1) % 8 === 0 || index === seatObjs.length - 1) {
-                                        const seatContainer = document.querySelector(".seat-container");
-                                        seatContainer.appendChild(seatRow);
-                                    }
-                                });
-                            }
-
-                            function setSeatsArray(){
-                                seats = document.querySelectorAll(".row .seat:not(.sold)"); 
-                            }
-
-                            function addSeatToCart(index) {
-
-                                const newRow = table.insertRow();
-                                newRow.setAttribute("data-indexes", index.toString());
-
-                                const seat = newRow.insertCell(0);
-                                const typeSelect = newRow.insertCell(1);
-                                const price = newRow.insertCell(2);
-                                const button = newRow.insertCell(3);
-
-                                seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + (index+1).toString() + '</p></div>';
-                                typeSelect.innerHTML = '<select name="ticket_type" id="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
-                                price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
-                                button.innerHTML = '<div class="ticket-deselect-btn"><button>-</button></div>';
-
-                                button.addEventListener("click", () => {
-                                    table.deleteRow(newRow.rowIndex);
-                                    updateSelectedCount();
-                                });
-                            }
-
-                            function removeSeatFromCart(index) {
-                                const rows = table.rows;
-                                for (let i = 1; i < rows.length; i++) {
-                                    if (rows[i].getAttribute("data-indexes") === index.toString()) {
-                                        table.deleteRow(i);
-                                        updateSelectedCount();
-                                        break;
-                                    }
-                                }
-                            }
-
-                            function clearSelection() {
-                                const selectedSeats = document.querySelectorAll(".row .seat.selected");
-                                selectedSeats.forEach((seat) => {
-                                    seat.classList.remove("selected");
-                                });
-
-                                const rows = table.rows;
-                                for (let i = rows.length - 1; i > 0; i--) {
-                                    table.deleteRow(i);
-                                }
-
-                                updateSelectedCount();
-                            }
-
-                            // Seat click event
-                            container.addEventListener("click", (e) => {
-                                if (e.target.classList.contains("seat") && !e.target.classList.contains("sold")) {
-                                    e.target.classList.toggle("selected");
-
-                                    updateSelectedCount();
-                                    console.log([... seats].indexOf(e.target));
-
-                                    if (e.target.classList.contains("selected")) {
-                                        addSeatToCart([... seats].indexOf(e.target));
-                                    } else {
-                                        const index = [... seats].indexOf(e.target);
-                                        removeSeatFromCart(index);
-                                    }
-                                }
-                            });
-
-                            resetBtm.addEventListener("click", () => {
-                                clearSelection();
-                            });
-
-                            addToCartBtn.addEventListener("click", () => {
+    let addTicketsOnReload = true;
 
 
-                                const rows = table.rows;
-                                const seats = [];
+    let ticketPrice = + movieSelect.value;
 
-                                for (let i = 1; i < rows.length; i++) {
-                                    const indexes = rows[i].getAttribute("data-indexes").split(",");
-                                    const seat = indexes.map((index) => [index])[0][0];
-                                    const price = rows[i].querySelector(".ticket-price").innerText;
-                                    seats.push({seat, price});
-                                }
+    const sessionJSON = "{{ session_json|escapejs }}";
+    const sessionObj = JSON.parse(sessionJSON);
 
-                                const data = {
-                                    "session": sessionObj,
-                                    "seats": seats
-                                };
+    const movieObj = sessionObj.movie;
+    console.log(sessionObj);
 
-                                fetch("{% url 'addtoCart' %}", {
-                                    method: 'POST',
-                                    credentials: 'same-origin',
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
-                                        'X-CSRFToken': "{{ csrf_token }}"
-                                    },
-                                    body: JSON.stringify(
-                                        {"data": data}
-                                    )
-                                }).then(response => {
-                                    if (response.ok) {
-                                        window.location.href = '{% url "ticketcart" %}';
-                                    } else {
-                                        throw new Error('Something went wrong');
-                                    }
-                                })
-                            }); // Initial count and total set
-                            updateSelectedCount();
-                        </script>
+    populateUI();
+
+    // Save selected movie index and price
+    function setMovieData(movieIndex, moviePrice) {
+        localStorage.setItem("selectedMovieIndex", movieIndex);
+        localStorage.setItem("selectedMoviePrice", moviePrice);
+    }
+
+    // Update total and count
+    function updateSelectedCount() {
+        const selectedSeats = document.querySelectorAll(".row .seat.selected");
+
+        const seatsIndex = [...selectedSeats].map((seat) => [...seats].indexOf(seat));
+
+        localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
+
+        if (addTicketsOnReload) {
+            seatsIndex.forEach((seat) => {
+                addSeatToCart(seat);
+            });
+            addTicketsOnReload = false;
+        }
+
+        const selectedSeatsCount = selectedSeats.length;
+
+        count.innerText = selectedSeatsCount;
+        total.innerText = selectedSeatsCount * ticketPrice;
+        totalPrice.innerText = selectedSeatsCount * ticketPrice;
+
+        setMovieData(movieSelect.selectedIndex, movieSelect.value);
+    }
+
+    // Get data from localstorage and populate UI
+    function populateUI() {
+
+        generateSeats();
+        setSeatsArray();
+
+        const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+
+        if (selectedSeats !== null && selectedSeats.length > 0) {
+            seats.forEach((seat, index) => {
+                if (selectedSeats.indexOf(index) > -1) {
+                    seat.classList.add("selected");
+                }
+            });
+        }
+
+        const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+
+        if (selectedMovieIndex !== null) {
+            movieSelect.selectedIndex = selectedMovieIndex;
+        }
+    }
+
+    function generateSeats() {
+        const seatObjs = sessionObj.seats;
+        let seatRowNo = 0;
+        let seatRow = null;
+
+        seatObjs.forEach((seat, index) => {
+            if (index % 8 === 0) {
+                seatRowNo++;
+                seatRow = document.createElement("div");
+                seatRow.classList.add("row", "justify-content-center");
+            }
+
+            const seatDiv = document.createElement("div");
+            seatDiv.classList.add("seat");
+
+            if (seat.is_available === false) {
+                seatDiv.classList.add("sold");
+            }
+
+            seatRow.appendChild(seatDiv);
+
+            if ((index + 1) % 8 === 0 || index === seatObjs.length - 1) {
+                const seatContainer = document.querySelector(".seat-container");
+                seatContainer.appendChild(seatRow);
+            }
+        });
+    }
+
+    function setSeatsArray() {
+        seats = document.querySelectorAll(".row .seat:not(.sold)");
+    }
+
+    function addSeatToCart(index) {
+
+        const newRow = table.insertRow();
+        newRow.setAttribute("data-indexes", index.toString());
+
+        const seat = newRow.insertCell(0);
+        const typeSelect = newRow.insertCell(1);
+        const price = newRow.insertCell(2);
+        const button = newRow.insertCell(3);
+
+        seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + (index + 1).toString() + '</p></div>';
+        typeSelect.innerHTML = '<select name="ticket_type" id="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
+        price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
+        button.innerHTML = '<div class="ticket-deselect-btn"><button>-</button></div>';
+
+        button.addEventListener("click", () => {
+            table.deleteRow(newRow.rowIndex);
+            updateSelectedCount();
+        });
+    }
+
+    function removeSeatFromCart(index) {
+        const rows = table.rows;
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i].getAttribute("data-indexes") === index.toString()) {
+                table.deleteRow(i);
+                updateSelectedCount();
+                break;
+            }
+        }
+    }
+
+    function clearSelection() {
+        const selectedSeats = document.querySelectorAll(".row .seat.selected");
+        selectedSeats.forEach((seat) => {
+            seat.classList.remove("selected");
+        });
+
+        const rows = table.rows;
+        for (let i = rows.length - 1; i > 0; i--) {
+            table.deleteRow(i);
+        }
+
+        updateSelectedCount();
+    }
+
+    // Seat click event
+    container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("seat") && !e.target.classList.contains("sold")) {
+            e.target.classList.toggle("selected");
+
+            updateSelectedCount();
+            console.log([...seats].indexOf(e.target));
+
+            if (e.target.classList.contains("selected")) {
+                addSeatToCart([...seats].indexOf(e.target));
+            } else {
+                const index = [...seats].indexOf(e.target);
+                removeSeatFromCart(index);
+            }
+        }
+    });
+
+    resetBtm.addEventListener("click", () => {
+        clearSelection();
+    });
+
+    addToCartBtn.addEventListener("click", () => {
 
 
-                    {% endblock %}
+        const rows = table.rows;
+        const seats = [];
+
+        for (let i = 1; i < rows.length; i++) {
+            const indexes = rows[i].getAttribute("data-indexes").split(",");
+            const seat = indexes.map((index) => [index])[0][0];
+            const price = rows[i].querySelector(".ticket-price").innerText;
+            seats.push({ seat, price });
+        }
+
+        const data = {
+            "session": sessionObj,
+            "seats": seats
+        };
+
+        fetch("{% url 'addtoCart' %}", {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest', // Necessary to work with request.is_ajax()
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+            body: JSON.stringify(
+                { "data": data }
+            )
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '{% url "ticketcart" %}';
+            } else {
+                throw new Error('Something went wrong');
+            }
+        })
+    }); // Initial count and total set
+    updateSelectedCount();
+
+    const reviewSubmitBtn = document.querySelector(".reviewSubmitBtn");
+    reviewSubmitBtn.addEventListener("click", () => {
+
+        const textarea = document.querySelector(".comment");
+        const comment = textarea.value;
+
+        addReview("John Doe", "2020-12-12", 5, comment);
+
+    });
+
+    function addReview(name, date, rating, text) {
+        const reviewsMembers = document.querySelector('.reviews-members');
+
+        const media = document.createElement('div');
+        media.classList.add('media');
+
+        const img = document.createElement('img');
+        img.setAttribute('src', 'http://bootdey.com/img/Content/avatar/avatar1.png');
+        img.classList.add('mr-3', 'rounded-pill');
+        const imgLink = document.createElement('a');
+        imgLink.setAttribute('href', '#');
+        imgLink.appendChild(img);
+
+        const mediaBody = document.createElement('div');
+        mediaBody.classList.add('media-body');
+
+        const reviewsHeader = document.createElement('div');
+        reviewsHeader.classList.add('reviews-members-header');
+
+        const starRating = document.createElement('span');
+        starRating.classList.add('star-rating', 'float-right');
+
+        for (let i = 0; i < rating; i++) {
+            const ratingLink = document.createElement('a');
+            const ratingIcon = document.createElement('i');
+            ratingIcon.classList.add('icofont-ui-rating', 'active');
+            ratingLink.setAttribute('href', '#');
+            ratingLink.appendChild(ratingIcon);
+            starRating.appendChild(ratingLink);
+        }
+
+        const nameLink = document.createElement('a');
+        nameLink.classList.add('text-black');
+        nameLink.setAttribute('href', '#');
+        nameLink.textContent = name;
+
+        const nameHeader = document.createElement('h6');
+        nameHeader.classList.add('mb-1');
+        nameHeader.appendChild(nameLink);
+
+        const dateHeader = document.createElement('p');
+        dateHeader.classList.add('text-gray');
+        dateHeader.textContent = date;
+
+        const reviewsBody = document.createElement('div');
+        reviewsBody.classList.add('reviews-members-body');
+
+        const textBody = document.createElement('p');
+        textBody.textContent = text;
+
+        reviewsHeader.appendChild(starRating);
+        reviewsHeader.appendChild(nameHeader);
+        reviewsHeader.appendChild(dateHeader);
+
+        reviewsBody.appendChild(textBody);
+
+        mediaBody.appendChild(reviewsHeader);
+        mediaBody.appendChild(reviewsBody);
+
+        media.appendChild(imgLink);
+        media.appendChild(mediaBody);
+
+        reviewsMembers.appendChild(media);
+    }
+</script>
+{% endblock %}
