@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat
+from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat, FoodAndDrinks
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -48,6 +48,9 @@ def movie_details(response, session_id):
     session_dict['movie'] = model_to_dict(movie)
     session_dict['room'] = model_to_dict(room)
     
+    if Seat.objects.filter(room_id = room).count() == 0:
+        room.create_seats()
+    
     
     seats = list (Seat.objects.filter(room_id = room).values('seat_id', 'seat_row', 'seat_number', 'is_available'))
     
@@ -70,7 +73,10 @@ def addtoCart(request):
 def ticketcart(request):
     data = request.session.get("cart")
     tickets = json.loads(json.dumps(data)) if data else [] 
-    context = {"tickets": json.dumps(tickets)}
+    
+    foodcombo = FoodAndDrinks.objects.all().values()
+    foodcombo_json = json.dumps(list(foodcombo))
+    context = {"tickets": json.dumps(tickets), "foodcombo": foodcombo_json}
     return render(request, "CinemaCustomerPages/ticketcart.html", context)
 
 @csrf_exempt
@@ -89,23 +95,50 @@ def checkout(request):
         return HttpResponse("OK")
         
 def checkOutCart(request):
+    print ("HELLO")
     data = request.session.get("checkout")
-    tickets = json.loads(json.dumps(data)) if data else []
-    context = {"tickets": json.dumps(tickets)}
-    return render(request, "CinemaCustomerPages/myPurchasedTickets.html", context)
+    data_json = json.loads(json.dumps(data)) if data else []
+      
+    for seat in data_json["tickets"]["seats"]:
+        
+        seat_obj = Seat.objects.get(seat_id=  int(seat["seat"])+1)
+        i = 0
+        
+        if seat_obj.is_available == False:
+            return redirect("/ticketcart")
+        else :
+            seat_obj.is_available = False
+            seat_obj.save()
+            
+            if not Ticket.objects.filter(seat_id = seat_obj).count() > 0:
+                movie_session = MovieSession.objects.get(session_id = data_json["tickets"]["session"]["session_id"])
+                ticket = Ticket.objects.create(movie_session = movie_session, seat_id = seat_obj, user_id = request.user)
+                ticket.save()
+    
+    return redirect("/TicketsPurse")
 
-def purchaseTickets(request):
-    pass
 
-def test(request, session_id):
-    session = MovieSession.objects.get(session_id=session_id)
-    movie = session.movie_id
-    print(movie)
-    session.movie = movie
-    session.start_time = session.start_time.strftime("%Y-%m-%d %H:%M:%S")
-    session_json = json.dumps(model_to_dict(session))
-    return render(request, 'CinemaCustomerPages/test.html', {'session': session,'session_json': session_json})
 
+def TicketsPurse(request):
+    
+    user_tickets = Ticket.objects.filter(user_id = request.user).select_related("movie_session", "seat_id")
+    
+    tickets_dict = {}
+    for index , ticket in enumerate(user_tickets):
+        ticket.purchased_date = ticket.purchased_date.strftime("%Y-%m-%d %H:%M:%S")
+        tickets_dict[str(index)] = model_to_dict(ticket)
+        tickets_dict[str(index)]["movie_session"] = model_to_dict(ticket.movie_session)
+        tickets_dict[str(index)]["movie_session"]["start_time"] = tickets_dict[str(index)]["movie_session"]["start_time"].strftime("%Y-%m-%d %H:%M:%S")
+        tickets_dict[str(index)]["movie_session"]["movie_id"] = model_to_dict(ticket.movie_session.movie_id)
+        tickets_dict[str(index)]["seat_id"] = model_to_dict(ticket.seat_id)
+        
+    
+    context = {"tickets": json.dumps(tickets_dict)}
+    
+    return render(request, "CinemaCustomerPages/myPurchasedTickets.html", context=context)
+
+def test(request):
+    return render(request, 'CinemaCustomerPages/test.html')
 
 def mainPageAlter(request):
     return render (request, 'CinemaCustomerPages/homealternative.html')

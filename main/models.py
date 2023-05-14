@@ -49,9 +49,22 @@ class CinemaRoom(models.Model):
     room_id = models.AutoField(primary_key=True, auto_created=True, null=False) 
     room_name = models.CharField(max_length=20, default="Room 1")
     total_seat = models.IntegerField(default=100)
- 
+    
     def __str__(self): 
         return f'{self.room_name}' 
+    
+    def __str__(self): 
+        return self.room_name
+    
+    def save (self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.pk and not Seat.objects.filter(room_id=self).exists():
+            self.create_seats()
+            
+    def create_seats(self):
+        for i in range(self.total_seat):
+            seat = Seat(room_id=self, seat_number=i+1, seat_row = i//10 + 1)
+            seat.save()
      
 class RatingAndReview(models.Model): 
     review_id = models.AutoField(primary_key=True) 
