@@ -134,20 +134,25 @@
             </span>
         </div>
 
-        <div class="form-group">
+        <form id="reviewForm" method="post">
+            {% csrf_token %}
+            
             <label>Your Comment</label>
-            <textarea class="comment form-control"></textarea>
-        </div>
-        <div class="form-group">
-            <button class="reviewSubmitBtn btn btn-primary btn-sm" type="button"> Submit Comment </button>
-        </div>
+            <textarea name="review" class="comment form-control"></textarea>
+            
+            <button class="reviewSubmitBtn btn btn-primary btn-sm" type="submit"> Submit Review </button>
+            
+        </form>
 
     </div>
 
 </div>
 <link rel="stylesheet" href="{% static 'css/movie_details.css' %}">
 <script>
-    console.log("movie_details.js loaded");
+    
+    // set the review form action to current url
+    const reviewForm = document.getElementById("reviewForm");
+    reviewForm.action = window.location.href;
 
     const container = document.querySelector(".seat-container");
     let seats = null;
@@ -171,9 +176,11 @@
 
     const sessionJSON = "{{ session_json|escapejs }}";
     const sessionObj = JSON.parse(sessionJSON);
-
     const movieObj = sessionObj.movie;
+
+    const userReviewJSON = "{{ user_review |escapejs }}";
     console.log(sessionObj);
+    console.log(userReviewJSON);
 
     populateUI();
 
@@ -367,16 +374,6 @@
         })
     }); // Initial count and total set
     updateSelectedCount();
-
-    const reviewSubmitBtn = document.querySelector(".reviewSubmitBtn");
-    reviewSubmitBtn.addEventListener("click", () => {
-
-        const textarea = document.querySelector(".comment");
-        const comment = textarea.value;
-
-        addReview("John Doe", "2020-12-12", 5, comment);
-
-    });
 
     function addReview(name, date, rating, text) {
         const reviewsMembers = document.querySelector('.reviews-members');

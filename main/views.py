@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .models import Movie, MovieSession, CinemaRoom, Ticket, Seat, FoodAndDrinks
+from .models import *
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -61,7 +61,21 @@ def movie_details(response, session_id):
     
     session_json = json.dumps(session_dict)
     
-    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json})
+    user_reviews = list(RatingAndReview.objects.filter(movie_id = movie).select_related('user_id').values('user_id__username', 'review', 'rating'))
+    
+    # intecept the review sent by the user
+    if response.method == 'POST':
+        UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = 1)
+        UserReview.save()
+        
+        user_reviews.append({
+            'username': response.user.username,
+            'review': UserReview.review,
+            'rating': UserReview.rating
+        })
+        
+    userReviews_json = json.dumps(user_reviews)
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
     
 def addtoCart(request):
     if request.method == "POST":
