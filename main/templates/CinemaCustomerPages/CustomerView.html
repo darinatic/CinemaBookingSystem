@@ -69,20 +69,11 @@
             <a class="nav-link mx-2 text-uppercase" href="/manager_home">ManagerHome</a>
           </li>
           {% endif %}
-<<<<<<< HEAD
           {% if user.is_authenticated and user.user_type_id == 2 %}
           <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="/ticket_list">StaffHome</a>
           </li>
           {% endif %}
-=======
-
-            {% if user.is_authenticated and user.user_type_id == 3 %}
-            <li class="nav-item">
-              <a class="nav-link mx-2 text-uppercase" href="/admin">Admin</a>
-            </li>
-            {% endif %}
->>>>>>> df011a48f27590ea3954cb8eb7ac3875c71ffb0f
         <!--  
           <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="#">Services</a>
@@ -103,4 +94,6 @@
     </div>
   </nav>
 {% endblock %}
+
+
 
