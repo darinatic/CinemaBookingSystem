@@ -11,5 +11,5 @@ class UserProfile(models.Model):
 
 class User(AbstractUser):
     
-    user_type_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1)
+    user_type = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1)
 
