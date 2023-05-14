@@ -33,3 +33,7 @@ pip install crispy-bootstrap5
 
 pip install xhtml2pdf
 
+# pillow 
+
+pip install Pillow
+
