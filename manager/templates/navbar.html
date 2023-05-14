@@ -1,16 +1,29 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
+        {% if user.user_type_id == 3 %}
         <a class="navbar-brand" href="">Cinema Management System</a>
+        {% endif %}
+        {% if user.user_type_id == 2 %}
+        <a class="navbar-brand" href="">Staff Ticket Management</a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExample07">
           <ul class="navbar-nav mr-auto">
+            {% if user.user_type_id == 3 %}
             <li {% if request.path == '/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
 			  <a class="nav-link" href="{% url 'manager_home' %}">Home</a>
             </li>
+            {% endif %}
+            {% if user.user_type_id == 2 %}
+            <li {% if request.path == '/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
+              <a class="nav-link" href="{% url 'ticket_list' %}">Home</a>
+                  </li>
+            {% endif %}
+              {% if user.user_type_id == 3 %}
 			        <li {% if request.path == '/cinema_room_list/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
                 <a class="nav-link" href="{% url 'cinema_room_list' %}">Cinema Rooms</a>
 			        </li>
@@ -20,20 +33,25 @@
 			        <li {% if request.path == '/movie_list/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
                 <a class="nav-link" href="{% url 'movie_list' %}">Movies</a>
 			        </li>
+              {% endif %}
+              {% if user.user_type_id == 2 or 3 %}
 			        <li {% if request.path == '/movie_session_list/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
                 <a class="nav-link" href="{% url 'movie_session_list' %}">Movie Sessions</a>
 			        </li>  
+              {% endif %}
+              {% if user.user_type_id == 3 %}
               <li {% if request.path == '/seat_list/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
                 <a class="nav-link" href="{% url 'seat_list' %}">Seats</a>
               </li>
               <li {% if request.path == '/report_page/' %} class="nav-item active"{% else %} class="nav-item" {% endif %}>
                 <a class="nav-link" href="{% url 'report_page' %}">Generate Report</a>
-              </li> 
+              </li>
+              {% endif %} 
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">USERNAME</a>
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ current_user }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown07">
-                  <a class="dropdown-item" href="#">Profile</a>
-                  <a class="dropdown-item" href="#">Logout</a>
+                  <a class="dropdown-item" href="{% url 'user_profile' %}">Profile</a>
+                  <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               </div>
             </li>
           </ul>
@@ -43,27 +61,3 @@
         </div>
     </div>
 </nav>
-<!-- <nav class="navbar navbar-default">
-    <div class="container">
-      <div class="navbar-header">
-        <ul class="nav navbar-nav">
-            
-            <li{% if request.path == '/manager_home/' %} class="active"{% endif %}>
-              <a href="{% url 'manager_home' %}">Home</a>
-            </li>
-            <li{% if request.path == '/cinema_room_list/' %} class="active"{% endif %}>
-              <a href="{% url 'cinema_room_list' %}">Cinema Rooms</a>
-            </li>
-            <li{% if request.path == '/food_and_drinks_list/' %} class="active"{% endif %}>
-              <a href="{% url 'food_and_drinks_list' %}">Food and Drinks</a>
-            </li>
-            <li{% if request.path == '/movie_list/' %} class="active"{% endif %}>
-              <a href="{% url 'movie_list' %}">Movies</a>
-            </li>
-            <li{% if request.path == '/movie_session_list/' %} class="active"{% endif %}>
-              <a href="{% url 'movie_session_list' %}">Movie Sessions</a>
-            </li>
-          </ul>
-      </div>
-    </div>
-  </nav> -->

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .align-right {
+        text-align: right;
+        border: 0;
+      }
+</style>
+<div class="card-body">
+    <h4>Ticket List</h4>
+    <form method="get">
+        <input class="form-control" id="myInput" type="text" name="q" placeholder="Search Staff or Customer Username" value="{{ query }}">
+        <!-- <button type="submit" class="btn btn-default">Search</button> -->
+    </form>
+    <form method="post" action="{% url 'ticket_update_multiple' %}">
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Ticket ID</th>
+                <th scope="col">Ticket Type</th>
+                <th scope="col">Customer / Staff</th>
+                <th scope="col">Movie</th>
+                <th scope="col">Starting</th>
+                <th scope="col">Room</th>
+                <th scope="col">Seat</th>
+                <th scope="col">Combo</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Date Purchased</th>
+                <th scope="col">Status</th>
+                <th scope="col"><a type="button" class="btn btn-success" href="{% url 'ticket_create' %}">Create</a></th>
+            </tr>
+        </thead>
+        {% if tickets %}
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.ticket_id }}</td>
+                    <td>{{ ticket.ticket_type }}</td>
+                    <td>{{ ticket.user_id.username }}</td>
+                    <td>{{ ticket.movie_session.movie_id.movie_title }}</td>
+                    <td>{{ ticket.movie_session.start_time }}</td>
+                    <td>{{ ticket.movie_session.room_id.room_name }}</td>
+                    <td>{{ ticket.seat_id.seat_row }}{{ ticket.seat_id.seat_number }}</td>
+                    <td>{{ ticket.combo_id.combo_name }}</td>
+                    <td>{{ ticket.cost }}</td>
+                    <td>{{ ticket.purchased_date }}</td>
+                    {% if ticket.is_paid == 1 %}
+                        <td>PAID</td>
+                    {% else %}
+                        <td>UNPAID</td>
+                    {% endif %}
+                    <td><input type="checkbox" name="selected_tickets" value="{{ ticket.ticket_id }}"></td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <p>No such ticket found</p>
+        {% endif %}
+    </table>
+    <div class="align-right">
+        <button type="submit" class="btn btn-warning">Update</button>
+    </div>
+    </form>
+</div>
+{% endblock %}

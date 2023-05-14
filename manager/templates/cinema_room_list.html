@@ -5,6 +5,12 @@
     <table class="table">
         <thead>
             <tr>
+                <form method="get">
+                    <input type="text" name="q" placeholder="Search Cinema Room" value="{{ query }}">
+                    <button type="submit">Search</button>
+                </form>
+            </tr>
+            <tr>
 				<th scope="col">Room ID</th>
                 <th scope="col">Room Name</th>
                 <th scope="col">Total Seats</th>
@@ -16,7 +22,7 @@
             <tr>
                 <td>{{ cinema_room.room_id }}</td>
                 <td>{{ cinema_room.room_name }}</td>
-                <td>{{ cinema_room.room_seat }}</td>
+                <td>{{ cinema_room.total_seat}}</td>
                 <td><a type="button" class="btn btn-warning" href="/cinema_room_update/{{ cinema_room.room_id }}">Update</a>
                     <!-- <a type="button" class="btn btn-danger" href="/book-delete/{{ book.id }}">Delete</a> -->
                 </td>
