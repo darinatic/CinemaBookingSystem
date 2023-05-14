@@ -19,7 +19,7 @@ def my_logout(request):
 def manager_home(request):
     return render(request, 'manager_home.html')
 
-# Functions for User Profile
+# Functions for Profile
 @login_required
 def user_profile(request):
     if request.method == 'POST':
