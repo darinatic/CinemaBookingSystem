@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
+    'staff.apps.StaffConfig',
     'bootstrap5',
     "crispy_forms",
     "crispy_bootstrap5",

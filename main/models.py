@@ -3,6 +3,7 @@ from django.db import models
 from register.models import User
 from datetime import datetime
 from PIL import Image
+from django.utils import timezone
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -88,6 +89,11 @@ class Seat(models.Model):
     seat_number = models.PositiveSmallIntegerField()
     is_available = models.BooleanField(default=True)
 
+    def update_availability(self):
+        if not self.is_available and self.session_id is not None and self.session_id.start_time + timezone.timedelta(hours=3) < timezone.now():
+            self.is_available = True
+            self.save()
+
     def __str__(self):
         return f'{self.room_id.room_name} {self.seat_row}-{self.seat_number}'
 
@@ -98,8 +104,17 @@ class Ticket(models.Model):
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE) 
     seat_id = models.ForeignKey(Seat, on_delete=models.CASCADE) 
     combo_id = models.ForeignKey(FoodAndDrinks, null=True, on_delete=models.CASCADE) 
-    cost = models.FloatField(default=0.0)
+    cost = models.FloatField(null=True)
     purchased_date = models.DateTimeField(default=datetime.now())
+    is_paid = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only update seat availability for new tickets
+            self.seat_id.is_available = False
+            self.seat_id.save()
+        if not self.purchased_date:  # Set default value for purchased_date if not provided
+            self.purchased_date = timezone.now()
+        super().save(*args, **kwargs)
  
     def __str__(self): 
         return f'{self.user_id.username}, {self.movie_session.movie_id.movie_title}, {self.ticket_type}'    

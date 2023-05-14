@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h5>Book Ticket</h5>
+    <br>
+    <div class="form-content" id="ticket-form">
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-sm-2">Ticket Type:</label>
+                <div class="col-sm-10">
+                    {{ form.ticket_type }}
+                </div>
+                <br>
+                <!-- <label class="control-label col-sm-2">User:</label> -->
+                <div class="col-sm-10">
+                    {{ form.user_id }}
+                </div>
+                <label class="control-label col-sm-2">Movie Session:</label>
+                <div class="col-sm-10">
+                    {{ form.movie_session }}
+                </div>
+                <br>
+                <label class="control-label col-sm-2">Seat:</label>
+                <div class="col-sm-10">
+                    {{ form.seat_id }}    
+                </div>
+                <br>
+                <label class="control-label col-sm-2">Cost:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="cost" id="id_cost" readonly>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Book Ticket</button>
+            <button type="reset" class="btn btn-dark">Reset</button>
+        </form>
+    </div>
+</div>
+<script>
+    // Set initial cost value to 10.0 when page is loaded
+    document.getElementById('id_cost').value = '10.0';
+    document.getElementById('id_ticket_type').addEventListener('change', updateCost);
+
+    function updateCost() {
+        console.log('enter updateCost');
+        var ticketType = document.getElementById('id_ticket_type').value;
+        var cost = calculateCost(ticketType);
+        document.getElementById('id_cost').value = cost;
+    }
+
+    function calculateCost(ticketType) {
+        if (ticketType === 'Adult') {
+            return 10.0;
+        } else if (ticketType === 'Child') {
+            return 5.0;
+        } else if (ticketType === 'Senior') {
+            return 8.0;
+        }
+        return 0.0;
+    }
+
+    // Get the movie session and seat elements
+    var movieSessionSelect = document.getElementById('id_movie_session');
+    console.log(movieSessionSelect);
+    var seatSelect = document.getElementById('id_seat_id');
+    console.log(seatSelect);
+
+    // Create an empty option for seat selection
+    var defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '---------';
+    seatSelect.appendChild(defaultOption);
+
+    // Update the seat options when the movie session is changed
+    movieSessionSelect.addEventListener('change', function () {
+        // Get the selected movie session id
+        var movieSessionId = this.value;
+        console.log(movieSessionId);
+        // Clear the seat options
+        seatSelect.innerHTML = '';
+        seatSelect.appendChild(defaultOption);
+
+        // Fetch the seats for the selected movie session
+        fetch('/get_seats/' + movieSessionId)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // Create an option for each seat and append it to the seat select
+                data.seats.forEach(function (seat) {
+                    var option = document.createElement('option');
+                    option.value = seat.id;
+                    option.textContent = seat.seat_row + seat.seat_number;
+                    seatSelect.appendChild(option);
+                });
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+    });
+</script>
+{% endblock %}

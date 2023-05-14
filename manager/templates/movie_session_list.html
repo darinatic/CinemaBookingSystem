@@ -16,7 +16,9 @@
                 <th scope="col">Room</th>
                 <th scope="col">Starting</th>
                 <th scope="col">Status</th>
+                {% if user.user_type_id == 3 %}
                 <th scope="col"><a type="button" class="btn btn-success" href="{%url 'movie_session_create' %}">Create</a></th>
+                {% endif %}
             </tr>
         </thead>
         {% if movie_sessions %}
@@ -32,9 +34,11 @@
                     {% else %}
                         <td>Ended</td>
                     {% endif %}
+                    {% if user.user_type_id == 3 %}
                     <td><a type="button" class="btn btn-warning" href="/movie_session_update/{{ movie_session.session_id }}">Update</a>
                         <a type="button" class="btn btn-danger" href="/movie_session_delete/{{ movie_session.session_id }}">Delete</a>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
