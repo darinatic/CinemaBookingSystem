@@ -65,18 +65,38 @@ def movie_details(response, session_id):
     
     # intecept the review sent by the user
     if response.method == 'POST':
+        
         UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = 1)
         UserReview.save()
         
         user_reviews.append({
-            'username': response.user.username,
+            'user_id__username': response.user.username,
+            'date' : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'review': UserReview.review,
             'rating': UserReview.rating
         })
         
+        userReviews_json = json.dumps(user_reviews)
+        
+        # save the data in session to be used in the reviewSuccess function 
+        response.session["movie"] = movie
+        response.session["session"] = session_json
+        response.session["user_review"] = userReviews_json
+        
+        return redirect('reviewSuccess')
+        
     userReviews_json = json.dumps(user_reviews)
     return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
+
+def reviewSuccess (response):
     
+    movie = response.session.get("movie")
+    session_json = response.session.get("session")
+    userReviews_json = response.session.get("user_review")
+    
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
+
+
 def addtoCart(request):
     if request.method == "POST":
         json_data = json.loads(request.body)

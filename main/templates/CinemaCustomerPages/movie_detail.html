@@ -179,11 +179,16 @@
     const movieObj = sessionObj.movie;
 
     const userReviewJSON = "{{ user_review |escapejs }}";
+    const userReviewObj = JSON.parse(userReviewJSON);
     console.log(sessionObj);
     console.log(userReviewJSON);
 
     populateUI();
 
+    userReviewObj.forEach((review) => {
+        console.log(review);
+        addReview (review.user_id__username, review.date, review.rating, review.review);
+    });
     // Save selected movie index and price
     function setMovieData(movieIndex, moviePrice) {
         localStorage.setItem("selectedMovieIndex", movieIndex);
