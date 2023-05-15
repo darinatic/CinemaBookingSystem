@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+# app_name = 'manager'
 
 urlpatterns = [
     # logout
@@ -12,7 +13,7 @@ urlpatterns = [
     path('manager_home/', views.manager_home, name='manager_home'),
 
     # user profile
-    path('user_profile/', views.user_profile, name='user_profile'),
+    path('user_preferences/', views.user_preferences, name='user_preferences'),
 
     # report page
     path('report_page/', views.report_page, name='report_page'),

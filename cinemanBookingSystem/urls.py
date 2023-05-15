@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', rv.register, name="register"),
     path('', include("main.urls")),
-    path('', include("manager.urls")),
+    path('', include("manager.urls",)),
     path('', include("staff.urls")),
     path('', include("django.contrib.auth.urls")),
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='register/password_manage/password_reset.html'), name='password_reset'),

@@ -19,23 +19,25 @@ def my_logout(request):
 def manager_home(request):
     return render(request, 'manager_home.html')
 
-# Functions for User Profile
-@login_required
-def user_profile(request):
+# Functions for User Preferences
+@login_required(login_url='/login/')
+def user_preferences(request):
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_form = UpdateCustomerForm(request.POST, request.FILES, instance=request.user.customer)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')
-            return redirect(to='user_profile')
+            messages.success(request, 'Your profile & preferences is updated successfully')
+            return redirect(to='user_preferences')
     else:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        profile_form = UpdateCustomerForm(instance=request.user.customer)
+        # customer = Customer.objects.get(user=request.user)
+        context = {'user_form': user_form, 'profile_form': profile_form}
 
-    return render(request, 'user_profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'user_preferences.html', context)
 
 # Functions for Cinema Room
 def create_cinema_room(request):
