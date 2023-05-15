@@ -37,3 +37,15 @@ pip install xhtml2pdf
 
 pip install Pillow
 
+# If got errors in migration, just remove all records with relation to User
+# or simply drop database and remove all migration files then run makemigrations, migrate
+# afterwards, to create a superuser and instance of userprofile must first be created
+# check database, if there is currently no record on UserProfile table, following instruction below
+# To create a User Profile instance, run the following code in terminal line by line
+python manage.py shell
+
+from register.models import UserProfile
+
+profile = UserProfile.objects.create(id=1, user_profile_name='Customer')
+
+exit()
