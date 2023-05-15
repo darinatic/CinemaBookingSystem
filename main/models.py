@@ -5,10 +5,12 @@ from datetime import datetime
 from PIL import Image
 from django.utils import timezone
 
-class Profile(models.Model):
+class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True, null=True)
     avatar = models.ImageField(upload_to='profile_avatars', default='avatar.jpg')
+    seat_preference = models.CharField(max_length=50, default='Front')
+    loyalty_points = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.user.username} profile'

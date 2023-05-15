@@ -68,11 +68,15 @@
           <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="/manager_home">ManagerHome</a>
           </li>
-          {% endif %}
-          {% if user.is_authenticated and user.user_type_id == 2 %}
+          {% elif user.is_authenticated and user.user_type_id == 2 %}
           <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="/ticket_list">StaffHome</a>
           </li>
+          {% elif user.is_authenticated and user.user_type_id == 4 %}
+          <li class="nav-item">
+            <a class="nav-link mx-2 text-uppercase" href="/admin">Admin</a>
+          </li>
+          {% else %}
           {% endif %}
         <!--  
           <li class="nav-item">
@@ -86,9 +90,13 @@
           <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="/ticketcart"><i class="fa-solid fa-cart-shopping me-1"></i> Cart</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" href="#"><i class="fa-solid fa-circle-user me-1"></i> Account</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link mx-2 text-uppercase" href="/user_preferences"><i class="fa-solid fa-circle-user me-1"></i> {{ current_user }}</a>
           </li>
+        </li>
         </ul>
       </div>
     </div>

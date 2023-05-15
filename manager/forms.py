@@ -2,15 +2,12 @@ from django import forms
 from register.models import User
 from main . models import *
 
-# class UserProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['bio', 'avatar']
+# UpdateUserForm and UpdateCustomerForm are used in views.py user_preferences
 class UpdateUserForm(forms.ModelForm):
     username = forms.CharField(max_length=100,
                                required=True,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(required=True,
+    email = forms.EmailField(required=False,
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
@@ -18,13 +15,16 @@ class UpdateUserForm(forms.ModelForm):
         fields = ['username', 'email']
 
 
-class UpdateProfileForm(forms.ModelForm):
+class UpdateCustomerForm(forms.ModelForm):
     avatar = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}))
-    bio = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+    bio = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+    seat_preference = forms.ChoiceField(choices=(('Front', 'Front'), ('Middle', 'Middle'), ('Back', 'Back'))
+                                        , widget=forms.Select(attrs={'class': 'form-control'}))
+    # loyalty_points = forms.ModelForm(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = Profile
-        fields = ['avatar', 'bio']
+        model = Customer
+        fields = ['avatar', 'bio', 'seat_preference', 'loyalty_points']
 
 class CinemaRoomForm(forms.ModelForm):
     room_name = forms.CharField(label='Name')
