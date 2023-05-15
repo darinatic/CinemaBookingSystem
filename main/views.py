@@ -75,11 +75,10 @@ def movie_details(response, session_id):
             'review': UserReview.review,
             'rating': UserReview.rating
         })
-        
+        print(user_reviews)
         userReviews_json = json.dumps(user_reviews)
         
         # save the data in session to be used in the reviewSuccess function 
-        response.session["movie"] = movie
         response.session["session"] = session_json
         response.session["user_review"] = userReviews_json
         
@@ -90,8 +89,8 @@ def movie_details(response, session_id):
 
 def reviewSuccess (response):
     
-    movie = response.session.get("movie")
     session_json = response.session.get("session")
+    movie = json.loads(session_json).get("movie")
     userReviews_json = response.session.get("user_review")
     
     return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
@@ -176,3 +175,5 @@ def test(request):
 
 def mainPageAlter(request):
     return render (request, 'CinemaCustomerPages/homealternative.html')
+
+
