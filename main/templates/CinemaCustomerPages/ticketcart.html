@@ -312,7 +312,10 @@
                             // transform the tickets data to JSON object to get it data
                             tickets = JSON.parse(tickets);
                             
-                            if (!tickets || ticketsJSON.seats.length !== tickets.seats.length) {
+                            
+                            if (!tickets || ticketsJSON.seats.length !== tickets.seats.length 
+                            || tickets.session['session_id'] !== ticketsJSON.session['session_id']) 
+                            {
                                 tickets = {{ tickets | safe }};
                                 saveTickets(tickets); // save the tickets to local storage
                             }
