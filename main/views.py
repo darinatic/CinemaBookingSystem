@@ -107,6 +107,9 @@ def ticketcart(request):
     data = request.session.get("cart")
     tickets = json.loads(json.dumps(data)) if data else [] 
     
+    for seat in tickets['seats']:
+        seat['foodcomboes'] = {}
+    
     foodcombo = FoodAndDrinks.objects.all().values()
     foodcombo_json = json.dumps(list(foodcombo))
     context = {"tickets": json.dumps(tickets), "foodcombo": foodcombo_json}

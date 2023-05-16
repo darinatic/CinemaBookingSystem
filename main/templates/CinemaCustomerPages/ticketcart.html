@@ -136,7 +136,7 @@
     }
 
     .card-cont .even-info p {
-        padding: 30px 50px 0 0
+        padding: 15px 50px 15px 0
     }
 
     .card-cont .even-date time span {
@@ -303,12 +303,27 @@
                             const ticketCart = document.querySelector(".ticketCard");
             
                             
-                            let tickets = {{ tickets | safe }};
+                            // this stores ticket data from movie_seat selection
+                            let ticketsJSON = {{ tickets | safe}};
+
+                            // get the previous tickets data user added to the cart
+                            let tickets = localStorage.getItem("tickets");
+
+                            // transform the tickets data to JSON object to get it data
+                            tickets = JSON.parse(tickets);
+                            
+                            if (!tickets || ticketsJSON.seats.length !== tickets.seats.length) {
+                                tickets = {{ tickets | safe }};
+                                saveTickets(tickets); // save the tickets to local storage
+                            }
+
                             console.log(tickets);
+                            
 
                             let foodcombo = {{foodcombo | safe}};
                             console.log(foodcombo);
-            
+                            
+                            // get the movie_data from the session in movie_ticket 
                             const movie = tickets.session.movie;
                             const movieName = movie.movie_title;
                             const movieGenre = movie.movie_genre;
@@ -400,7 +415,7 @@
             
                                 // create a new p element with the text "nexen square for people australia, sydney"
                                 const p = document.createElement("p");
-                                p.textContent = movieDescription;
+                                p.textContent = "Seat No : " + seat.seat + " | Room No : " + tickets.session.room['room_name'];
 
                                 // create a list of food items when the user add the food items
                                 const comboes = document.createElement("div");
@@ -414,11 +429,23 @@
                                 comboesList.classList.add("comboesList");
                                 comboes.appendChild(comboesList);
 
-                                const notice = document.createElement("li")
-                                notice.innerHTML = "Click on ticket to add food items";
-                                notice.classList.add("notice");
+                                // check if there are comboes already added to the tickets
+                                if (seat.foodcomboes) {
+                                    for (const comboName in seat.foodcomboes){
+                                        const combo = document.createElement("li");
+                                        combo.innerHTML = comboName + " X " + seat.foodcomboes[comboName]['combo_quantity'];
+                                        comboesList.appendChild(combo);
+                                    }
+                                }
+                                // if there are none, this will be displayed
+                                else {
+                                    const notice = document.createElement("li")
+                                    notice.innerHTML = "Click on ticket to add food items";
+                                    notice.classList.add("notice");
 
-                                comboesList.appendChild(notice);
+                                    comboesList.appendChild(notice);
+                                }
+                                
 
                                 // append the i and p elements to the even-info div
                                 
@@ -522,7 +549,7 @@
                             }
              
                             function calculateTotalPrice() {
-                                console.log(localStorage.getItem("comboes"));
+                                
                                 let total = 0;
                                 let foodTotal = 0;
                                 let subtotal = 0;
@@ -530,11 +557,16 @@
                                 let finalPrice = 0;
                                 tickets.seats.forEach((seat) => {
                                     total += 5;
-                                    foodTotal += 1;
-                                    subtotal = total + foodTotal;
-                                    tax = subtotal * 0.13;
-                                    finalPrice = subtotal + tax;
+
+                                    for (const comboName in seat.foodcomboes){
+                                        foodTotal += seat.foodcomboes[comboName]['combo_price'] * seat.foodcomboes[comboName]['combo_quantity'];
+                                    }
                                 });
+
+                                subtotal = total + foodTotal;
+                                tax = subtotal * 0.13;
+                                finalPrice = subtotal + tax;
+
                                 document.getElementById("total").innerHTML = "$" + total;
                                 document.getElementById("foodTotal").innerHTML = "$" + foodTotal;
                                 document.getElementById("subtotal").innerHTML = "$" + subtotal;
@@ -604,10 +636,11 @@
                             function confirmOrder() {
 
                                 const foodcards = document.querySelectorAll(".card-fooditemcard");
+                                const selectedCard = document.querySelector(".card-selected");
                                 const comboList = document.querySelector(".card-selected .card-cont .foodItems .comboesList");
                                 comboList.innerHTML = "";
 
-                                let comboes = JSON.parse(localStorage.getItem("comboes")) || [];
+                                tickets.seats[selectedCard.dataset.index].foodcomboes = {};
 
                                 foodcards.forEach((foodcard) => {
                                     const comboQuantity = foodcard.querySelector(".card-footer .d-flex .quantity").value;
@@ -621,17 +654,21 @@
                                         combo_li.classList.add("list-group-item", "d-flex", "justify-content-between", "lh-condensed");
                                         combo_li.innerHTML = comboname + " x " + comboQuantity;
                                         comboList.appendChild(combo_li);
-
-                                        comboes.push({
+                                        
+                                        const combo = {
                                             "combo_name": comboname,
                                             "combo_price": comboPrice,
                                             "combo_quantity": comboQuantity
-                                        });
+                                        };
+                                        tickets.seats[selectedCard.dataset.index].foodcomboes[comboname] = combo;
+                                        
+
+                                        saveTickets(tickets);
                                     }
                                     
                                 });
 
-                                localStorage.setItem("comboes", JSON.stringify(comboes));
+                                
                             }
 
                             function checkOut () {
@@ -644,12 +681,8 @@
                                 rightsection.innerHTML = checkOutListHTML;
                                 calculateTotalPrice();
 
-                            }
-        
-                            listAvailableComboes();
-                            // add a click event listener to the "Add Card" button
-                            document.getElementById("PayBtnId").addEventListener("click", function () {
-            
+                                document.querySelector(".PayBtn").addEventListener("click", function () {
+                                
                                 const data = {
                                     "tickets": tickets
                                 };
@@ -665,14 +698,19 @@
                                     body: JSON.stringify(
                                         {"data": data}
                                     )
-                                }).then(response => {
-                                    if (response.ok) {
-                                        window.location.href = '{% url "checkOutCart" %}';
-                                    } else {
-                                        throw new Error('Something went wrong');
-                                    }
-                                })
-                            });
+                                    }).then(response => {
+                                        if (response.ok) {
+                                            window.location.href = '{% url "checkOutCart" %}';
+                                        } else {
+                                            throw new Error('Something went wrong');
+                                        }
+                                    })
+                                });
+
+                            } 
+                            listAvailableComboes();
+                            // add a click event listener to the "Add Card" button
+                            
                             
                             // The first ticket will always be highlighted, so that customer
                             // can see the food comboes by default
@@ -681,7 +719,7 @@
                             window.addEventListener("load", () => {
                             // Select the first ticket card element and highlight it
                                 const firstTicket = document.querySelector(".card");
-                            highlightCard(firstTicket);
+                                    highlightCard(firstTicket);
                             });
                             
                         </script>
