@@ -11,6 +11,7 @@ class Customer(models.Model):
     avatar = models.ImageField(upload_to='profile_avatars', default='avatar.jpg')
     seat_preference = models.CharField(max_length=50, default='Front')
     loyalty_points = models.IntegerField(default=0)
+    
 
     def __str__(self):
         return f'{self.user.username} profile'
