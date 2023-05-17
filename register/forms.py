@@ -16,3 +16,5 @@ class RegisterForm(UserCreationForm):
             'password2': forms.PasswordInput(attrs={'class': 'form-control', 'id': 'id_tag3'}),
         }
         
+
+        

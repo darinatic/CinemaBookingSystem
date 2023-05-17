@@ -3,7 +3,7 @@ from .models import *
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
-from django.core import serializers
+from main.extendedEncoder import ExtendedEncoder
 import json
 
 # Create your views here.
@@ -34,6 +34,7 @@ def mainPage(response):
     
     for session in sessions_list:
         session['start_time'] = session['start_time'].strftime("%Y-%m-%d %H:%M:%S")
+        
     sessions_json = json.dumps(sessions_list)
     return render(response, 'CinemaCustomerPages/home.html', {'movies': movies,'sessions' : sessions , 'sessions_json': sessions_json})
 
@@ -48,6 +49,9 @@ def movie_details(response, session_id):
     session_dict['movie'] = model_to_dict(movie)
     session_dict['room'] = model_to_dict(room)
     
+    customer = Customer.objects.get(user = response.user)
+    customer_json = json.dumps(model_to_dict(customer), cls=ExtendedEncoder)
+
     if Seat.objects.filter(room_id = room).count() == 0:
         room.create_seats()
     
@@ -85,7 +89,7 @@ def movie_details(response, session_id):
         return redirect('reviewSuccess')
         
     userReviews_json = json.dumps(user_reviews)
-    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json, 'customer' : customer_json})
 
 def reviewSuccess (response):
     
@@ -106,6 +110,8 @@ def addtoCart(request):
 def ticketcart(request):
     data = request.session.get("cart")
     tickets = json.loads(json.dumps(data)) if data else [] 
+    
+    
     
     for seat in tickets['seats']:
         seat['foodcomboes'] = {}

@@ -306,7 +306,7 @@
             <script>
 
                 let sessions = {{ sessions_json|safe }};
-
+                
                 sessions.forEach(session => {
                     createMovieSession(session);
                 });
