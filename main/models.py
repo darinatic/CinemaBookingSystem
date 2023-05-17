@@ -133,3 +133,5 @@ class Ticket(models.Model):
  
     def __str__(self): 
         return f'{self.user_id.username}, {self.movie_session.movie_id.movie_title}, {self.ticket_type}'    
+
+    
