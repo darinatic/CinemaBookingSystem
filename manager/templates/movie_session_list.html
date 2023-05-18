@@ -30,9 +30,9 @@
                     <td>{{ movie_session.room_id.room_name }}</td>
                     <td>{{ movie_session.start_time }}</td>
                     {% if movie_session.start_time > now %}
-                        <td>Upcoming</td>
+                        <td>UPCOMING</td>
                     {% else %}
-                        <td>Ended</td>
+                        <td>ENDED</td>
                     {% endif %}
                     {% if user.user_type_id == 3 %}
                     <td><a type="button" class="btn btn-warning" href="/movie_session_update/{{ movie_session.session_id }}">Update</a>

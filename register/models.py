@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 class UserProfile(models.Model):
     id = models.AutoField(primary_key=True)
     user_profile_name = models.CharField(max_length=50)
+    suspend = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user_profile_name}'

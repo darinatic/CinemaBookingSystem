@@ -3,13 +3,13 @@ Website for booking cinema Ticket
 CinemaBookingSystem
 Website for booking cinema Ticket
 
-# To run the app, open the cmd, change the directory to where the manage.py is in (CinemaBookingSystem/manage.py) 
+# open the cmd, change the directory to where the manage.py is in (e.g. C:\Users\User\Desktop\csit314\CinemaBookingSystem) 
 
-# create a virtual environment, 'myenv' is the name of the environment
+# *optional* create a virtual environment, 'myenv' is the name of the environment
 
 py -m venv myenv
 
-# run the virtual environment
+# *optional* run the virtual environment
 
 myenv\scripts\activate
 
@@ -37,11 +37,14 @@ pip install xhtml2pdf
 
 pip install Pillow
 
-# If got errors in migration, just remove all records with relation to User
-# or simply drop database and remove all migration files then run makemigrations, migrate
-# afterwards, to create a superuser and instance of userprofile must first be created
-# check database, if there is currently no record on UserProfile table, following instruction below
-# To create a User Profile instance, run the following code in terminal line by line
+
+# ################################################################################################# #
+# If got errors in migration, just remove all records with relation to User                         #
+# or simply drop database and remove all migration files then run makemigrations, migrate           #
+# afterwards, to create a superuser and instance of userprofile must first be created               #
+# check database, if there is currently no record on UserProfile table, following instruction below #
+# To create a User Profile instance, run the following code in terminal line by line                #
+# ################################################################################################# #
 python manage.py shell
 
 from register.models import UserProfile

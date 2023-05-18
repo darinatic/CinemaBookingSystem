@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+  <h3>Purchase food and drinks</h3>
+  <br><br>
+  <form method="post">
+    {% csrf_token %}
+        <div class="form-group row">
+          <label for="{{ form.combo_name.id_for_label }}" class="col-sm-2 col-form-label">{{ form.combo_name.label }}</label>
+          <div class="col-sm-6">
+            {{ form.combo_name }}
+          </div>
+        </div>
+        <br>
+        <div class="form-group row">
+          <label for="{{ form.combo_price.id_for_label }}" class="col-sm-2 col-form-label">{{ form.combo_price.label }}</label>
+          <div class="col-sm-6">
+            {{ form.combo_price }}
+          </div>
+        </div>
+        <br>
+        <div class="form-group row">
+          <label for="{{ form.quantity.id_for_label }}" class="col-sm-2 col-form-label">{{ form.quantity.label }}</label>
+          <div class="col-sm-6">
+            {{ form.quantity }}
+          </div>
+        </div>
+        <br>
+        <div class="form-group row">
+          <p>Item Total: <span id="total"></span></p>
+        </div>
+        <br><br>
+        <div class="form-group row">
+          <div class="col-md-2">
+              <a type="button" class="btn btn-danger btn-block" href="{% url 'ticket_list' %}">Cancel</a>
+          </div>
+          <div class="col-md-2">
+              <button type="submit" class="btn btn-warning btn-block">Add Item</button>
+          </div>
+        </div><br><br>
+        {% if cart %}
+          <h6>Checkout Items:</h6>
+          {% for item in cart %}
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Combo Name:<strong>{{ item.combo_name }}</strong>
+                  Quantity:<strong>{{ item.quantity }}</strong>
+                  Price:<strong>${{ item.price }}</strong>
+                  <form method="post" action="{% url 'remove_item' forloop.counter0 %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                  </form>
+                </li>
+            </ul><br>
+          {% endfor %}
+            <p><strong>TOTAL: ${{ total_cost }}</strong></p>
+            <br>
+            <div class="form-group row">
+              <div class="col-md-2">
+                <a type="button" class="btn btn-secondary btn-block" href="{% url 'reset_cart' %}">Reset</a>
+              </div>
+              <div class="col-md-2">
+                <a type="button" class="btn btn-warning btn-block" href="{% url 'food_and_drinks_checkout' %}">Checkout</a>
+              </div>
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+
+<script>
+// Add event listeners to the combo and quantity fields
+document.getElementById('id_quantity').value = 1;
+var comboNameSelect = document.getElementById('id_combo_name');
+var quantityInput = document.getElementById('id_quantity');
+
+comboNameSelect.addEventListener('change', function() {
+  var comboName = comboNameSelect.value;
+  console.log(comboName);
+
+  fetch('/get_combo_price/' + comboName)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      document.getElementById('id_combo_price').value = data.combo_price;
+      updateTotal();
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    });
+});
+
+quantityInput.addEventListener('input', function() {
+  updateTotal();
+});
+
+function updateTotal() {
+  var comboPrice = parseFloat(document.getElementById('id_combo_price').value);
+  var quantity = parseInt(quantityInput.value);
+  var total = comboPrice * quantity;
+  document.getElementById('total').textContent = '$' + total.toFixed(2);
+}
+
+</script>
+{% endblock %}
