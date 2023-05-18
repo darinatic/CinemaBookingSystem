@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box
+}
+
+body {
+    background-color: #dadde6;
+    font-family: arial
+}
+
+.fl-left {
+    float: left
+}
+
+.fl-right {
+    float: right
+}
+
+h1 {
+    text-transform: uppercase;
+    font-weight: 900;
+    border-left: 10px solid #fec500;
+    padding-left: 10px;
+    margin-bottom: 30px
+}
+
+.row {
+    overflow: hidden
+}
+
+.card {
+    display: table-row;
+    width: 100%;
+    height: 16em;
+    background-color: #fff;
+    color: #989898;
+    margin-bottom: 10px;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    border-radius: 4px;
+    position: relative
+}
+
+.card+.card {
+    margin-left: 2%
+}
+
+.date {
+    display: table-cell;
+    width: 25%;
+    height: 15em;
+    position: relative;
+    text-align: center;
+    border-right: 2px dashed #dadde6
+}
+
+.date:before,
+.date:after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: #DADDE6;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 1;
+    border-radius: 50%
+}
+
+.date:after {
+    top: auto;
+    bottom: -15px
+}
+
+.date time {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)
+}
+
+.date time span {
+    display: block
+}
+
+.date time span:first-child {
+    color: #2b2b2b;
+    font-weight: 600;
+    font-size: 250%
+}
+
+
+.card-cont {
+    display: table-cell;
+    width: 75%;
+    height: 15em;
+    font-size: 85%;
+    padding: 10px 10px 30px 50px
+}
+
+.card-cont h3 {
+    color: #3C3C3C;
+    font-size: 130%
+}
+
+
+.card-cont>div {
+    display: table-row
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i,
+.card-cont .even-date time,
+.card-cont .even-info p {
+    display: table-cell
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i {
+    padding: 5% 5% 0 0
+}
+
+.card-cont .even-info p {
+    padding: 15px 50px 15px 0
+}
+
+.card-cont .even-date time span {
+    display: block
+}
+
+.card-cont .notice {
+    color: red;
+}
+
+
+
+.card-cont .cancelBtn {
+    display: block;
+    text-decoration: none;
+    width: 100;
+    background-color: red;
+    text-align: center;
+    color: white;
+    border-radius: 2px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px
+}
+
+.card-cont .couponBtn {
+    display: block;
+    background-color: red;
+    text-align: center;
+    color: white;
+}
+
+
+@media screen and(max-width: 860px) {
+    .card {
+        display: block;
+        float: none;
+        width: 100%;
+        margin-bottom: 10px
+    }
+
+    .card+.card {
+        margin-left: 0
+    }
+
+    .card-cont .even-date,
+    .card-cont .even-info {
+        font-size: 75%
+    }
+}
+
+.card-selected {
+    background-color: #c41f26;
+    color: white;
+}
+
+.card-selected .notice {
+    color: aqua;
+}
+
+.card-selected .card-cont h3 {
+    color: white;
+}
+
+.classCheckoutlist {
+    font-size: 2em;
+
+}
+
+.classCheckoutlist .row {
+    font-family: 'Oswald', sans-serif;
+    text-align: right;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.classCheckoutlist .row .price {
+    text-align: left;
+}
+
+.classCheckoutlist .discount {
+    background-color: #c41f26;
+    border-radius: 0;
+    color: white;
+    margin: 10px;
+}
+
+.PayBtn {
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: #c41f26;
+    width: 200px;
+    height: 34px;
+    color: white;
+    right: 4%;
+
+}
+
+.RedeemBtn {
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: #c41f26;
+    width: 200px;
+    height: 34px;
+    color: white;
+    right: 4%;
+}
+
+.card-fooditemcard {
+    background: #c41f26;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 40%;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.card-fooditemcard .card-body {
+    padding-top: 10px;
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card-fooditemcard .card-footer {
+    font-size: 20px;
+    height: 2em;
+    padding-top: 3px;
+    padding-left: 10px;
+}
+
+.quantity {
+    width: 70px;
+    height: 10px;
+
+}
