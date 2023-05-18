@@ -29,9 +29,15 @@ class TicketForm(forms.ModelForm):
         cleaned_data = super().clean()
         cleaned_data['purchased_date'] = datetime.now()
         cleaned_data['combo_id'] = None
-        cleaned_data['is_paid'] = True
 
         return cleaned_data
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.is_paid = True  # Set is_paid to True
+        if commit:
+            instance.save()
+        return instance
     
     
 class TicketUpdateMultipleForm(forms.Form):
