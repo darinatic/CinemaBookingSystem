@@ -199,6 +199,12 @@ Customer View Template
 
         evenInfo.appendChild(p);
 
+        const ticketType = document.createElement("div");
+        ticketType.classList.add("ticketType");
+        ticketType.innerHTML = "Ticket Type : " + seat.ticketType;
+
+        evenInfo.appendChild(ticketType);
+
         // create a list of food items when the user add the food items
         const comboes = document.createElement("div");
         comboes.classList.add("foodItems");
@@ -338,7 +344,7 @@ Customer View Template
         let finalPrice = 0;
 
         tickets.seats.forEach((seat) => {
-            ticketTotal += 5;
+            ticketTotal += parseFloat(seat.price);
 
             for (const comboName in seat.foodcomboes) {
                 foodTotal += seat.foodcomboes[comboName]['combo_price'] * seat.foodcomboes[comboName]['combo_quantity'];
@@ -354,7 +360,7 @@ Customer View Template
         // final price is a real total price
         finalPrice = subtotal + tax;
 
-        document.getElementById("total").innerHTML = "$" + total;
+        document.getElementById("total").innerHTML = "$" + ticketTotal;
         document.getElementById("foodTotal").innerHTML = "$" + foodTotal;
         document.getElementById("subtotal").innerHTML = "$" + subtotal;
         document.getElementById("tax").innerHTML = "$" + tax;

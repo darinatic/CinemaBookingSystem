@@ -14,9 +14,40 @@
 </head>
 
 <body>
+
+    <style>
+      .messages {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .messages li {
+          background-color: #f2dede;
+          border: 1px solid #ebccd1;
+          color: #a94442;
+          margin: 10px 0;
+          padding: 10px;
+      }
+
+      .messages li.error {
+          background-color: #f44336;
+          border-color: #f44336;
+          color: #fff;
+      }
+    </style>
     
+
     {% block navbar %}
     {% endblock %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
     {% block content %}
     {% endblock %} 

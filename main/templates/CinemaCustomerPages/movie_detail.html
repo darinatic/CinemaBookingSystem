@@ -285,14 +285,20 @@
         const button = newRow.insertCell(3);
 
         seat.innerHTML = '<div class="sc-ticket"><p>Seat No.' + (index + 1).toString() + '</p></div>';
-        typeSelect.innerHTML = '<select name="ticket_type" id="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
-        price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
-        button.innerHTML = '<div class="ticket-deselect-btn"><button>-</button></div>';
+        typeSelect.innerHTML = '<select name="ticket_type" class="sc_ticketType"><option value="child">child</option><option value="adult">adult</option></select>';
+        price.innerHTML = '<div class="ticket-price">$ 3.00</div>';
+        
 
-        button.addEventListener("click", () => {
-            table.deleteRow(newRow.rowIndex);
-            updateSelectedCount();
+        typeSelect.addEventListener("change", () => {
+            const ticketType = typeSelect.querySelector("select").value;
+            if (ticketType === "child") {
+                price.innerHTML = '<div class="ticket-price">$ 3.00</div>';
+            } else if (ticketType === "adult") {
+                price.innerHTML = '<div class="ticket-price">$ 5.00</div>';
+            }
         });
+
+        
     }
 
     function removeSeatFromCart(index) {
@@ -350,8 +356,10 @@
         for (let i = 1; i < rows.length; i++) {
             const indexes = rows[i].getAttribute("data-indexes").split(",");
             const seat = indexes.map((index) => [index])[0][0];
-            const price = rows[i].querySelector(".ticket-price").innerText;
-            seats.push({ seat, price });
+            let price = rows[i].querySelector(".ticket-price").innerText;
+            price = price.substring(2, price.length);
+            const ticketType = rows[i].querySelector(".sc_ticketType").value;
+            seats.push({ seat, price, ticketType });
         }
 
         const data = {
