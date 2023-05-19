@@ -93,31 +93,7 @@
     <div class="UserReviewContainer">
         <h5 class="mb-1">All Ratings and Reviews</h5>
         <div class="reviews-members pt-4 pb-4">
-            <!-- <div class="media">
-                <a href="#"><img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png"
-                        class="mr-3 rounded-pill"></a> 
-                    <div class="media-body">
-                    <div class="reviews-members-header">
-                        <span class="star-rating float-right">
-                            <a href="#"><i class="icofont-ui-rating active"></i></a>
-                            <a href="#"><i class="icofont-ui-rating active"></i></a>
-                            <a href="#"><i class="icofont-ui-rating active"></i></a>
-                            <a href="#"><i class="icofont-ui-rating active"></i></a>
-                            <a href="#"><i class="icofont-ui-rating"></i></a>
-                        </span>
-                        <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
-                        <p class="text-gray">Tue, 20 Mar 2020</p>
-                    </div>
-                    <div class="reviews-members-body">
-                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
-                            classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a
-                            Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure
-                            Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the
-                            word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from
-                            sections </p>
-                    </div>
-                </div>
-            </div> -->
+           
         </div>
     </div>
     <hr>
@@ -275,26 +251,22 @@
         const seatDivs = document.querySelectorAll(".seat");
         let customerSeatPreference = customerObj.seat_preference;
         customerSeatPreference = customerSeatPreference.toString();
-        console.log(seatDivs);
-        
         
         let startIndex, endIndex;
-        console.log( customerSeatPreference  == "Front");
-
+      
         if (customerSeatPreference === "Front") {
             startIndex = 3;
             endIndex = Math.floor(seatDivs.length / 3) - 1;
         } else if (customerSeatPreference === "Middle") {
-            startIndex = Math.floor(seatDivs.length / 3) + 3;
-            endIndex = Math.floor(seatDivs.length * 2 / 3) + 2;
+            startIndex = Math.floor(seatDivs.length / 3) ;
+            endIndex = Math.floor(seatDivs.length * 2 / 3) - 1;
         } else if (customerSeatPreference === "Back") {
-            startIndex = Math.floor(seatDivs.length * 2 / 3) + 3;
-            endIndex = seatDivs.length + 2;
+            startIndex = Math.floor(seatDivs.length * 2 / 3);
+            endIndex = seatDivs.length - 1;
         }
 
-        console.log(startIndex, endIndex);
+        
         const customerPreferredSeats = Math.floor(Math.random() * (endIndex - startIndex + 1)) + startIndex;
-        console.log(seatDivs[customerPreferredSeats], customerPreferredSeats);
         seatDivs[customerPreferredSeats].classList.add("selected"); 
     }
 

@@ -228,17 +228,9 @@ Customer View Template
             comboesList.appendChild(notice);
         }
 
-        const CouponsContainer = document.createElement("div");
-        CouponsContainer.classList.add("couponsContainer");
+        
 
-        const CouponsLabel = document.createElement("h6");
-        CouponsLabel.innerHTML = "Coupons :";
-
-        const CouponsList = document.createElement("ul");
-        CouponsList.classList.add("couponsList");
-        CouponsContainer.appendChild(CouponsList);
-
-        CouponsContainer.appendChild(CouponsLabel);
+       
 
         // create a new a element with the text "tickets"
         const btn = document.createElement("button");
@@ -251,7 +243,7 @@ Customer View Template
         cardCont.appendChild(evenInfo);
         cardCont.appendChild(comboes);
         cardCont.appendChild(btn);
-        cardCont.appendChild(CouponsContainer);
+        
 
         // append the date and card-cont sections to the card article
         card.appendChild(date);
