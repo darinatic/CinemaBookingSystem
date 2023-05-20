@@ -7,7 +7,45 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: left
+    }
 
+    .rating>input {
+        display: none
+    }
+
+    .rating>label {
+        position: relative;
+        width: 1em;
+        font-size: 30px;
+        font-weight: 300;
+        color: #FFD600;
+        cursor: pointer
+    }
+
+    .rating>label::before {
+        content: "\2605";
+        position: absolute;
+        opacity: 0
+    }
+
+    .rating>label:hover:before,
+    .rating>label:hover~label:before {
+        opacity: 1 !important
+    }
+
+    .rating>input:checked~label:before {
+        opacity: 1
+    }
+
+    .rating:hover>input:checked~label:before {
+        opacity: 0.4
+    }
+</style>
 <div class="container my-5 mx-7 ">
     <div class="row ">
         <div class=" col-4 p-3 m-1 ">
@@ -100,14 +138,8 @@
     <div class="bg-secondary rounded shadow-sm p-4 mb-5 rating-review-select-page">
         <h5 class="mb-4">Leave Comment</h5>
         <p class="mb-2 ">Rate the Place</p>
-        <div class="mb-4">
-            <span class="star-rating">
-                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
-                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
-                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
-                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
-                <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
-            </span>
+        
+        <div class="rating"> <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
         </div>
 
         <form id="reviewForm" method="post">
@@ -165,7 +197,7 @@
     populateUI();
 
     userReviewObj.forEach((review) => {
-        addReview (review.user_id__username, review.date, review.rating, review.review);
+        addReview (review.user_id__username, review.rating, review.review);
     });
 
     // Save selected movie index and price
@@ -388,7 +420,7 @@
     }); // Initial count and total set
     updateSelectedCount();
 
-    function addReview(name, date, rating, text) {
+    function addReview(name, rating, text) {
         const reviewsMembers = document.querySelector('.reviews-members');
 
         const media = document.createElement('div');
@@ -411,26 +443,19 @@
         starRating.classList.add('star-rating', 'float-right');
 
         for (let i = 0; i < rating; i++) {
-            const ratingLink = document.createElement('a');
-            const ratingIcon = document.createElement('i');
-            ratingIcon.classList.add('icofont-ui-rating', 'active');
-            ratingLink.setAttribute('href', '#');
-            ratingLink.appendChild(ratingIcon);
-            starRating.appendChild(ratingLink);
+            const ratingStar = document.createElement('span');
+            ratingStar.innerHTML = "⭐";
+            starRating.appendChild(ratingStar);
         }
 
         const nameLink = document.createElement('a');
-        nameLink.classList.add('text-black');
+        nameLink.classList.add('text-white');
         nameLink.setAttribute('href', '#');
         nameLink.textContent = name;
 
         const nameHeader = document.createElement('h6');
         nameHeader.classList.add('mb-1');
         nameHeader.appendChild(nameLink);
-
-        const dateHeader = document.createElement('p');
-        dateHeader.classList.add('text-gray');
-        dateHeader.textContent = date;
 
         const reviewsBody = document.createElement('div');
         reviewsBody.classList.add('reviews-members-body');
@@ -440,8 +465,6 @@
 
         reviewsHeader.appendChild(starRating);
         reviewsHeader.appendChild(nameHeader);
-        reviewsHeader.appendChild(dateHeader);
-
         reviewsBody.appendChild(textBody);
 
         mediaBody.appendChild(reviewsHeader);

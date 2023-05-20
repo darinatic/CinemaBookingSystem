@@ -92,7 +92,6 @@ def movie_details(response, session_id):
         
         user_reviews.append({
             'user_id__username': response.user.username,
-            'date' : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'review': UserReview.review,
             'rating': UserReview.rating
         })
@@ -102,6 +101,7 @@ def movie_details(response, session_id):
         # save the data in session to be used in the reviewSuccess function 
         response.session["session"] = session_json
         response.session["user_review"] = userReviews_json
+        response.session["customer"] = customer_json
         
         return redirect('reviewSuccess')
         
@@ -113,8 +113,9 @@ def reviewSuccess (response):
     session_json = response.session.get("session")
     movie = json.loads(session_json).get("movie")
     userReviews_json = response.session.get("user_review")
+    customer_json = response.session.get("customer")
     
-    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json, 'customer' : customer_json})
 
 
 def addtoCart(request):
