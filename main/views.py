@@ -86,8 +86,9 @@ def movie_details(response, session_id):
     
     # intecept the review sent by the user
     if response.method == 'POST':
+        print(response.POST)
         
-        UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = 1)
+        UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = int(response.POST.get('rating')))
         UserReview.save()
         
         user_reviews.append({
@@ -103,7 +104,7 @@ def movie_details(response, session_id):
         response.session["user_review"] = userReviews_json
         response.session["customer"] = customer_json
         
-        return redirect('reviewSuccess')
+        return redirect('movie_details', session_id=session_id)
         
     userReviews_json = json.dumps(user_reviews)
     return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json, 'customer' : customer_json})
