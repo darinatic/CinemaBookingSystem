@@ -199,6 +199,12 @@ Customer View Template
 
         evenInfo.appendChild(p);
 
+        const ticketType = document.createElement("div");
+        ticketType.classList.add("ticketType");
+        ticketType.innerHTML = "Ticket Type : " + seat.ticketType;
+
+        evenInfo.appendChild(ticketType);
+
         // create a list of food items when the user add the food items
         const comboes = document.createElement("div");
         comboes.classList.add("foodItems");
@@ -228,17 +234,9 @@ Customer View Template
             comboesList.appendChild(notice);
         }
 
-        const CouponsContainer = document.createElement("div");
-        CouponsContainer.classList.add("couponsContainer");
+        
 
-        const CouponsLabel = document.createElement("h6");
-        CouponsLabel.innerHTML = "Coupons :";
-
-        const CouponsList = document.createElement("ul");
-        CouponsList.classList.add("couponsList");
-        CouponsContainer.appendChild(CouponsList);
-
-        CouponsContainer.appendChild(CouponsLabel);
+       
 
         // create a new a element with the text "tickets"
         const btn = document.createElement("button");
@@ -251,7 +249,7 @@ Customer View Template
         cardCont.appendChild(evenInfo);
         cardCont.appendChild(comboes);
         cardCont.appendChild(btn);
-        cardCont.appendChild(CouponsContainer);
+        
 
         // append the date and card-cont sections to the card article
         card.appendChild(date);
@@ -346,7 +344,7 @@ Customer View Template
         let finalPrice = 0;
 
         tickets.seats.forEach((seat) => {
-            ticketTotal += 5;
+            ticketTotal += parseFloat(seat.price);
 
             for (const comboName in seat.foodcomboes) {
                 foodTotal += seat.foodcomboes[comboName]['combo_price'] * seat.foodcomboes[comboName]['combo_quantity'];
@@ -362,7 +360,7 @@ Customer View Template
         // final price is a real total price
         finalPrice = subtotal + tax;
 
-        document.getElementById("total").innerHTML = "$" + total;
+        document.getElementById("total").innerHTML = "$" + ticketTotal;
         document.getElementById("foodTotal").innerHTML = "$" + foodTotal;
         document.getElementById("subtotal").innerHTML = "$" + subtotal;
         document.getElementById("tax").innerHTML = "$" + tax;

@@ -235,8 +235,26 @@
             let movieName = movie.movie_title;
             let movieGenre = movie.movie_genre;
             let movieDuration = movie.movie_duration;
-            let movieDescription = movie.movie_description;
+            
+            let ticket_type = ticket.ticket_type;
+            let ticket_price = ticket.cost;
 
+            if (ticket_price == null) {
+                ticket_price = 0;
+            }
+            
+            let purchase_date = ticket.purchase_date;
+            let seatNo = ticket.seat_id.seat_number;
+            let foodcombo = ticket.combo_id;
+            let totalprice = parseInt (ticket_price);
+
+            if (foodcombo == null) {
+                foodcombo = "No food combo";
+            } else {
+                foodcombo = ticket.combo_id.combo_name;
+                totalprice += parseInt(ticket.combo_id.combo_price);
+            }
+            
             const card = document.createElement("article");
             card.classList.add("card");
 
@@ -273,40 +291,50 @@
             const evenDate = document.createElement("div");
             evenDate.classList.add("even-date");
 
-            // create a new i element with the class "fa fa-calendar"
-            const i = document.createElement("i");
-            i.classList.add("fa", "fa-calendar");
+            
+            
 
             // create a new time element with the text "wednesday 28 december 2014" and "08:55pm to 12:00 am"
             const time2 = document.createElement("time");
             time2.innerHTML = "<span> Duration : " + movieDuration + " hours </span>";
 
-            // append the i and time elements to the even-date div
-            evenDate.appendChild(i);
+            
             evenDate.appendChild(time2);
 
             // create a new div element with the class "even-info"
             const evenInfo = document.createElement("div");
             evenInfo.classList.add("even-info");
 
-            // create a new i element with the class "fa fa-map-marker"
-            const i2 = document.createElement("i");
-            i2.classList.add("fa", "fa-map-marker");
+            
 
             // create a new p element with the text "nexen square for people australia, sydney"
             const p = document.createElement("p");
-            p.textContent = movieDescription;
+            p.textContent = "Seat No : " + seatNo ;
 
-            // append the i and p elements to the even-info div
-            evenInfo.appendChild(i2);
+             // append the i and p elements to the even-info div
+
             evenInfo.appendChild(p);
 
-            
+            const ticketType = document.createElement("div");
+            ticketType.classList.add("ticketType");
+            ticketType.innerHTML = "Ticket Type : " + ticket_type;
+
+            evenInfo.appendChild(ticketType);
+
+            const foodCombo = document.createElement("div");
+            foodCombo.classList.add("foodCombo");
+            foodCombo.innerHTML = "Food Combo : " + foodcombo;
+
+            const totalPrice = document.createElement("p");
+            totalPrice.classList.add("totalPrice");
+            totalPrice.innerHTML = "Total Price : " + totalprice;
 
             // append the small, h3, even-date, even-info, and a elements to the card-cont section
             cardCont.appendChild(h3);
             cardCont.appendChild(evenDate);
             cardCont.appendChild(evenInfo);
+            cardCont.appendChild(foodCombo);
+            cardCont.appendChild(totalPrice);
             
 
             // append the date and card-cont sections to the card article

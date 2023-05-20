@@ -4,13 +4,30 @@ from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from main.extendedEncoder import ExtendedEncoder
+from django.contrib import messages
 import json
+
 
 # Create your views here.
 def mainPage(response):
-   
+    
+    if response.session.get('redirect') is None:
+        response.session['redirect'] = False
+    
     if not response.user.is_authenticated:
         return redirect ("/login")
+    
+    if response.user.user_type_id == 2 and response.session['redirect'] == False:
+        response.session['redirect'] = True
+        return redirect ("/ticket_list")
+    
+    if response.user.user_type_id == 3 and response.session['redirect'] == False:
+        response.session['redirect'] = True
+        return redirect ("/manager_home")
+    
+    if response.user.user_type_id == 4 and response.session['redirect'] == False:
+        response.session['redirect'] = True
+        return redirect ("/admin")
     
     if response.method == 'POST' and response.POST.get('addMovie'):
         m = Movie()
@@ -69,13 +86,13 @@ def movie_details(response, session_id):
     
     # intecept the review sent by the user
     if response.method == 'POST':
+        print(response.POST)
         
-        UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = 1)
+        UserReview = RatingAndReview(movie_id = movie, user_id = response.user, review = response.POST.get('review'), rating = int(response.POST.get('rating')))
         UserReview.save()
         
         user_reviews.append({
             'user_id__username': response.user.username,
-            'date' : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'review': UserReview.review,
             'rating': UserReview.rating
         })
@@ -85,8 +102,9 @@ def movie_details(response, session_id):
         # save the data in session to be used in the reviewSuccess function 
         response.session["session"] = session_json
         response.session["user_review"] = userReviews_json
+        response.session["customer"] = customer_json
         
-        return redirect('reviewSuccess')
+        return redirect('movie_details', session_id=session_id)
         
     userReviews_json = json.dumps(user_reviews)
     return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json, 'customer' : customer_json})
@@ -96,8 +114,9 @@ def reviewSuccess (response):
     session_json = response.session.get("session")
     movie = json.loads(session_json).get("movie")
     userReviews_json = response.session.get("user_review")
+    customer_json = response.session.get("customer")
     
-    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json})
+    return render(response, 'CinemaCustomerPages/movie_detail.html', {'movie': movie,'session_json': session_json, 'user_review' : userReviews_json, 'customer' : customer_json})
 
 
 def addtoCart(request):
@@ -110,8 +129,11 @@ def addtoCart(request):
 def ticketcart(request):
     data = request.session.get("cart")
     tickets = json.loads(json.dumps(data)) if data else [] 
+    print(tickets)
     
-    
+    if not tickets:
+        messages.error(request, "Your cart is empty")
+        return redirect("/")
     
     for seat in tickets['seats']:
         seat['foodcomboes'] = {}
@@ -137,16 +159,29 @@ def checkout(request):
         return HttpResponse("OK")
         
 def checkOutCart(request):
-    print ("HELLO")
+    
     data = request.session.get("checkout")
     data_json = json.loads(json.dumps(data)) if data else []
+    print(data_json)
+    
+    room_id = data_json["tickets"]["session"]["room"]["room_id"]
       
     for seat in data_json["tickets"]["seats"]:
+        print(int(seat["seat"])+1)
+        seat_obj = Seat.objects.get(seat_number=  int(seat["seat"])+1, room_id = room_id)
+       
+        foodcombo_details = seat.get("foodcomboes").values()
+        ticketType = seat.get("ticketType")
+        ticket_price = seat.get("price")
         
-        seat_obj = Seat.objects.get(seat_id=  int(seat["seat"])+1)
-        i = 0
+        combo = None
+        for value in foodcombo_details:
+            combo = FoodAndDrinks.objects.get(combo_name = value.get("combo_name"),
+                                          combo_price = value.get("combo_price"))
+        
         
         if seat_obj.is_available == False:
+            messages.error(request, "Seat " + str(seat_obj.seat_row) + str(seat_obj.seat_number) + " is not available")
             return redirect("/ticketcart")
         else :
             seat_obj.is_available = False
@@ -154,8 +189,13 @@ def checkOutCart(request):
             
             if not Ticket.objects.filter(seat_id = seat_obj).count() > 0:
                 movie_session = MovieSession.objects.get(session_id = data_json["tickets"]["session"]["session_id"])
-                ticket = Ticket.objects.create(movie_session = movie_session, seat_id = seat_obj, user_id = request.user)
+                ticket = Ticket.objects.create(movie_session = movie_session, seat_id = seat_obj, 
+                                               combo_id = combo, user_id = request.user, ticket_type = ticketType, 
+                                               cost = float(ticket_price), is_paid = True)
                 ticket.save()
+    
+    del request.session["cart"]
+    request.session.modified = True
     
     return redirect("/TicketsPurse")
 
@@ -173,6 +213,9 @@ def TicketsPurse(request):
         tickets_dict[str(index)]["movie_session"]["start_time"] = tickets_dict[str(index)]["movie_session"]["start_time"].strftime("%Y-%m-%d %H:%M:%S")
         tickets_dict[str(index)]["movie_session"]["movie_id"] = model_to_dict(ticket.movie_session.movie_id)
         tickets_dict[str(index)]["seat_id"] = model_to_dict(ticket.seat_id)
+        
+        if ticket.combo_id:
+            tickets_dict[str(index)]["combo_id"] = model_to_dict(ticket.combo_id)
         
     
     context = {"tickets": json.dumps(tickets_dict)}
